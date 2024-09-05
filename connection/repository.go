@@ -22,7 +22,7 @@ func (c *ConnectionModel) Create(
 
 func (c ConnectionModel) GetById(id int) ConnectionModel {
 	err := config.DB.QueryRow("SELECT * FROM connection WHERE id = ?", id).Scan(
-		&c.id, &c.name, &c.host, &c.port, &c.user, &c.password, &c.db_name, &c.db_type, &c.user_id)
+		&c.Id, &c.Name, &c.Host, &c.Port, &c.User, &c.Password, &c.Db_name, &c.Db_type, &c.User_id)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -40,7 +40,7 @@ func (c ConnectionModel) GetByUserId(userId int) []ConnectionModel {
 
 	for rows.Next() {
 		var conn ConnectionModel
-		err := rows.Scan(&conn.id, &conn.name, &conn.host, &conn.port, &conn.user, &conn.password, &conn.db_name, &conn.db_type, &conn.user_id)
+		err := rows.Scan(&conn.Id, &conn.Name, &conn.Host, &conn.Port, &conn.User, &conn.Password, &conn.Db_name, &conn.Db_type, &conn.User_id)
 		if err != nil {
 			fmt.Println(err)
 		}

@@ -1,13 +1,13 @@
 package connection
 
 type ConnectionModel struct {
-	id       int
-	name     string
-	host     string
-	port     string
-	user     string
-	password string
-	db_name  string
-	db_type  string
-	user_id  int
+	Id       int
+	Name     string
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Db_name  string
+	Db_type  string
+	User_id  int
 }
