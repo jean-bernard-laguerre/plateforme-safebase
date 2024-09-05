@@ -15,6 +15,7 @@ func AddRoutes(app *fiber.App) {
 		}
 		conn := ConnectionModel{}
 		testConn := conn.GetById(id)
+
 		if TestConnection(testConn) {
 			return ctx.Status(200).JSON(fiber.Map{
 				"success": true,
