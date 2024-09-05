@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
-	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/user"
 )
 
@@ -12,9 +11,9 @@ func main() {
 	//connect to the database
 	config.InitDB()
 
-	co := connection.ConnectionModel{}
+	/* co := connection.ConnectionModel{}
 	testConn := co.GetById(1)
-	connection.TestConnection(testConn)
+	connection.TestConnection(testConn) */
 
 	defer config.CloseDB()
 
