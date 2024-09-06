@@ -26,7 +26,7 @@ func (u *UserModel) Create(
 
 func (u UserModel) GetById(id int) UserModel {
 	err := config.DB.QueryRow("SELECT * FROM user WHERE id = ?", id).Scan(
-		&u.id, &u.Email, &u.Password)
+		&u.Id, &u.Email, &u.Password)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -35,7 +35,7 @@ func (u UserModel) GetById(id int) UserModel {
 
 func (u UserModel) GetByEmail(email string) UserModel {
 	err := config.DB.QueryRow("SELECT * FROM user WHERE email = ?", email).Scan(
-		&u.id, &u.Email, &u.Password)
+		&u.Id, &u.Email, &u.Password)
 	if err != nil {
 		fmt.Println(err)
 	}

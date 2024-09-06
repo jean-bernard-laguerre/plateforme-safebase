@@ -13,17 +13,20 @@ func Register(email string, password string) bool {
 	}
 }
 
-func Login(email string, password string) {
+func Login(email string, password string) (UserModel, error) {
 	user := UserModel{}
 	user = user.GetByEmail(email)
 
 	if user.Email == "" {
 		fmt.Println("Email does not exist")
-		return
+		return user, fmt.Errorf("Email does not exist")
+
 	} else if user.Password != password {
 		fmt.Println("Incorrect password")
-		return
+		return user, fmt.Errorf("Incorrect password")
+
 	}
 
 	fmt.Println("Login successful")
+	return user, nil
 }
