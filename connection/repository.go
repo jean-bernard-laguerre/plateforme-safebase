@@ -39,12 +39,12 @@ func (c ConnectionModel) GetByUserId(userId int) []ConnectionModel {
 	connections := []ConnectionModel{}
 
 	for rows.Next() {
-		var conn ConnectionModel
-		err := rows.Scan(&conn.Id, &conn.Name, &conn.Host, &conn.Port, &conn.User, &conn.Password, &conn.Db_name, &conn.Db_type, &conn.User_id)
+		var co ConnectionModel
+		err := rows.Scan(&co.Id, &co.Name, &co.Host, &co.Port, &co.User, &co.Password, &co.Db_name, &co.Db_type, &co.User_id)
 		if err != nil {
 			fmt.Println(err)
 		}
-		connections = append(connections, conn)
+		connections = append(connections, co)
 	}
 
 	return connections

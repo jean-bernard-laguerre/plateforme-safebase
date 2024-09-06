@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 func TestConnection(c ConnectionModel) bool {
@@ -39,9 +40,8 @@ func TestConnectionMySql(c ConnectionModel) bool {
 }
 
 func TestConnectionPostgres(c ConnectionModel) bool {
-	connString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", c.Host, c.Port, c.User, c.Password, c.Db_name)
+	connString := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", c.User, c.Password, c.Host, c.Port, c.Db_name)
 	db, err := sql.Open(c.Db_type, connString)
-	err = db.Ping()
 	if err != nil {
 		fmt.Println("Invalid Connection:", c.Db_type, fmt.Sprintf("%s:%s", c.Host, c.Port), c.Db_name, err)
 		return false
