@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jean-bernard-laguerre/plateforme-safebase/src/config"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 )
 
 func (c *ConnectionModel) Create(

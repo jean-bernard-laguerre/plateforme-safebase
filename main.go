@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/jean-bernard-laguerre/plateforme-safebase/src/config"
-	"github.com/jean-bernard-laguerre/plateforme-safebase/src/connection"
-	"github.com/jean-bernard-laguerre/plateforme-safebase/src/user"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/user"
 )
 
 func main() {
