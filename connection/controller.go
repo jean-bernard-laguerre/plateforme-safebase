@@ -15,13 +15,14 @@ func AddRoutes(app *fiber.App) {
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
-				"message": "Invalid input",
+				"error":   err,
 			})
 		}
 		conn := ConnectionModel{}
-		testConn := conn.GetById(id)
+		testConn, err := conn.GetById(id)
 
-		if TestConnection(testConn) {
+		coValid, err := TestConnection(testConn)
+		if coValid {
 			return ctx.Status(200).JSON(fiber.Map{
 				"success": true,
 				"message": "Connection valide",
@@ -29,7 +30,7 @@ func AddRoutes(app *fiber.App) {
 		} else {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
-				"message": "Connection invalide",
+				"error":   err,
 			})
 		}
 	})
@@ -37,24 +38,22 @@ func AddRoutes(app *fiber.App) {
 	co.Post("/", func(ctx *fiber.Ctx) error {
 		conn := new(ConnectionModel)
 		if err := ctx.BodyParser(conn); err != nil {
-			fmt.Println(err)
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
-				"message": "Invalid input",
+				"error":   err,
 			})
 		}
 		fmt.Println(conn.Db_name)
-		if conn.Create(
-			conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id,
-		) {
+		success, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id)
+		if !success {
+			return ctx.Status(400).JSON(fiber.Map{
+				"success": false,
+				"error":   err,
+			})
+		} else {
 			return ctx.Status(201).JSON(fiber.Map{
 				"success": true,
 				"message": "Connection ajoutée",
-			})
-		} else {
-			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"message": "Connection invalide",
 			})
 		}
 	})
@@ -64,11 +63,17 @@ func AddRoutes(app *fiber.App) {
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
-				"message": "Invalid input",
+				"error":   err,
 			})
 		}
 		conn := ConnectionModel{}
-		connections := conn.GetByUserId(userId)
+		connections, err := conn.GetByUserId(userId)
+		if err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"success": false,
+				"error":   err,
+			})
+		}
 		return ctx.Status(200).JSON(fiber.Map{
 			"success":     true,
 			"connections": connections,
@@ -80,11 +85,11 @@ func AddRoutes(app *fiber.App) {
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
-				"message": "Invalid input",
+				"error":   err,
 			})
 		}
 		conn := ConnectionModel{}
-		connection := conn.GetById(id)
+		connection, err := conn.GetById(id)
 		return ctx.Status(200).JSON(fiber.Map{
 			"success":    true,
 			"connection": connection,

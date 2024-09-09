@@ -8,16 +8,19 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func TestConnection(c ConnectionModel) bool {
+func TestConnection(c ConnectionModel) (bool, error) {
+	var result bool
+	var err error
+
 	if c.Db_type == "mysql" {
-		return TestConnectionMySql(c)
+		result, err = TestConnectionMySql(c)
 	} else if c.Db_type == "postgres" {
-		return TestConnectionPostgres(c)
+		result, err = TestConnectionPostgres(c)
 	}
-	return false
+	return result, err
 }
 
-func TestConnectionMySql(c ConnectionModel) bool {
+func TestConnectionMySql(c ConnectionModel) (bool, error) {
 	config := mysql.Config{
 		User:   c.User,
 		Passwd: c.Password,
@@ -31,22 +34,22 @@ func TestConnectionMySql(c ConnectionModel) bool {
 	err = db.Ping()
 	if err != nil {
 		fmt.Println("Invalid Connection:", c.Db_type, fmt.Sprintf("%s:%s", c.Host, c.Port), c.Db_name, err)
-		return false
+		return false, err
 	}
 	fmt.Println("Valid Connection:", c.Db_type, fmt.Sprintf("%s:%s", c.Host, c.Port), c.Db_name)
 
 	defer db.Close()
-	return true
+	return true, nil
 }
 
-func TestConnectionPostgres(c ConnectionModel) bool {
+func TestConnectionPostgres(c ConnectionModel) (bool, error) {
 	connString := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", c.User, c.Password, c.Host, c.Port, c.Db_name)
 	db, err := sql.Open(c.Db_type, connString)
 	if err != nil {
 		fmt.Println("Invalid Connection:", c.Db_type, fmt.Sprintf("%s:%s", c.Host, c.Port), c.Db_name, err)
-		return false
+		return false, err
 	}
 	fmt.Println("Valid Connection:", c.Db_type, fmt.Sprintf("%s:%s", c.Host, c.Port), c.Db_name)
 	defer db.Close()
-	return true
+	return true, nil
 }
