@@ -9,54 +9,51 @@ import (
 
 func (c *ConnectionModel) Create(
 	name string, host string, port string, user string, password string, db_name string, db_type string, user_id int,
-) bool {
+) (bool, error) {
 	_, err := config.DB.Exec("INSERT INTO connection (name, host, port, user, password, db_name, db_type, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", name, host, port, user, password, db_name, db_type, user_id)
 	if err != nil {
-		fmt.Println(err)
-		return false
+		return false, err
 	}
-
-	fmt.Println("Connection created")
-	return true
+	return true, nil
 }
 
-func (c ConnectionModel) GetById(id int) ConnectionModel {
+func (c ConnectionModel) GetById(id int) (ConnectionModel, error) {
 	err := config.DB.QueryRow("SELECT * FROM connection WHERE id = ?", id).Scan(
 		&c.Id, &c.Name, &c.Host, &c.Port, &c.User, &c.Password, &c.Db_name, &c.Db_type, &c.User_id)
 	if err != nil {
-		fmt.Println(err)
+		return ConnectionModel{}, err
 	}
-	return c
+	return c, nil
 }
 
-func (c ConnectionModel) GetByUserId(userId int) []ConnectionModel {
+func (c ConnectionModel) GetByUserId(userId int) ([]ConnectionModel, error) {
 	rows, err := config.DB.Query("SELECT * FROM connection WHERE user_id = ?", userId)
 	if err != nil {
-		fmt.Println(err)
+		return []ConnectionModel{}, err
 	}
 	defer rows.Close()
 
 	connections := []ConnectionModel{}
 
 	for rows.Next() {
-		var conn ConnectionModel
-		err := rows.Scan(&conn.Id, &conn.Name, &conn.Host, &conn.Port, &conn.User, &conn.Password, &conn.Db_name, &conn.Db_type, &conn.User_id)
+		var co ConnectionModel
+		err := rows.Scan(&co.Id, &co.Name, &co.Host, &co.Port, &co.User, &co.Password, &co.Db_name, &co.Db_type, &co.User_id)
 		if err != nil {
-			fmt.Println(err)
+			return []ConnectionModel{}, err
 		}
-		connections = append(connections, conn)
+		connections = append(connections, co)
 	}
 
-	return connections
+	return connections, nil
 }
 
-func (c ConnectionModel) Delete(id int) bool {
+func (c ConnectionModel) Delete(id int) (bool, error) {
 	_, err := config.DB.Exec("DELETE FROM connection WHERE id = ?", id)
 	if err != nil {
 		fmt.Println(err)
-		return false
+		return false, err
 	}
 
 	fmt.Println("Connection deleted")
-	return true
+	return true, nil
 }

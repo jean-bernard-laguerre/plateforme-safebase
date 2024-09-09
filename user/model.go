@@ -1,7 +1,7 @@
 package user
 
 type UserModel struct {
-	id       int
+	Id       int
 	Email    string
 	Password string
 }

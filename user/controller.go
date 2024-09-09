@@ -44,10 +44,18 @@ func AddRoutes(app *fiber.App) {
 			})
 		}
 
-		Login(user.Email, user.Password)
+		u, err := Login(user.Email, user.Password)
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"success": false,
+				"message": err.Error(),
+			})
+		}
+
 		return c.Status(200).JSON(fiber.Map{
 			"success": true,
 			"message": "User logged in",
+			"user":    u,
 		})
 	})
 }
