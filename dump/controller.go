@@ -44,32 +44,32 @@ func AddRoutes(app *fiber.App) {
 
 
 	app.Get("/backup/:id", func(ctx *fiber.Ctx) error {
-		backup := new(DumpModel)
-		if err := ctx.BodyParser(backup); err != nil {
-		return ctx.Status(200).JSON(fiber.Map{
-			"success": true,
-			"message": "Backup by id",
+		id, err := ctx.ParamsInt("id")
+		if err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"success": false,
+				"message": "Invalid input",
 			})
 		} else {
 			return ctx.Status(200).JSON(fiber.Map{
-				"success": false,
-				"message": err.Error(),
+				"success": true,
+				"message": "Backup found" + string(id),
 			})
 		}
 	})
 
 
 	app.Delete("/backup/:id", func(ctx *fiber.Ctx) error {
-		backup := new(DumpModel)
-		if err := ctx.BodyParser(backup); err != nil {
-		return ctx.Status(200).JSON(fiber.Map{
-			"success": true,
-			"message": "Backup deleted",
+		id, err := ctx.ParamsInt("id")
+		if err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"success": false,
+				"message": "Invalid input",
 			})
 		} else {
 			return ctx.Status(200).JSON(fiber.Map{
-				"success": false,
-				"message": err.Error(),
+				"success": true,
+				"message": "Backup deleted successfully" + string(id),
 			})
 		}
 	})
