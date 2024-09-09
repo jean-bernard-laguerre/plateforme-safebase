@@ -1,8 +1,6 @@
 package connection
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -43,7 +41,6 @@ func AddRoutes(app *fiber.App) {
 				"error":   err,
 			})
 		}
-		fmt.Println(conn.Db_name)
 		success, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id)
 		if !success {
 			return ctx.Status(400).JSON(fiber.Map{

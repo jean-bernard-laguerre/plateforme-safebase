@@ -39,7 +39,7 @@ func (c ConnectionModel) GetByUserId(userId int) ([]ConnectionModel, error) {
 		var co ConnectionModel
 		err := rows.Scan(&co.Id, &co.Name, &co.Host, &co.Port, &co.User, &co.Password, &co.Db_name, &co.Db_type, &co.User_id)
 		if err != nil {
-			fmt.Println(err)
+			return []ConnectionModel{}, err
 		}
 		connections = append(connections, co)
 	}
