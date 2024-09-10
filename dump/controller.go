@@ -5,10 +5,6 @@ import (
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
 )
 
-//DONE 1. Create a route create a backup
-//DONE 2. Create a route to get all backups
-//DONE 3. Create a route to get a backup by id
-//DONE 4. Create a route to delete a backup by id
 
 func createErrorResponse (ctx *fiber.Ctx, statusCode int, message string) error {
 	return ctx.Status(statusCode).JSON(fiber.Map{
@@ -27,21 +23,6 @@ func createSuccessResponse (ctx *fiber.Ctx, message string) error {
 
 func AddRoutes(app *fiber.App) {
 
-	/* app.Post( "/backup", func(ctx *fiber.Ctx) error {
-		backup := new(DumpModel)
-		if err := ctx.BodyParser(backup); err != nil {
-		return ctx.Status(200).JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-			})
-		} else {
-			return ctx.Status(200).JSON(fiber.Map{
-				"success": true,
-				"message": "Backup created successfully",
-			})
-		}
-	}) */
-
 	app.Post("/backup", func(ctx *fiber.Ctx ) error {
 		backup := new(DumpModel)
 		if err := ctx.BodyParser(backup); err != nil {
@@ -54,12 +35,12 @@ func AddRoutes(app *fiber.App) {
 		if error != nil {
 			return createErrorResponse(ctx, 404, "Connection not found")
 		}
-		
+
 		var result string
 		if dbConn.Db_type == "postgres" {
-			result = PostgresDump(dbConn.Db_name)
+			result = PostgresDump(backup, &dbConn)
 		} else if dbConn.Db_type == "mysql" {
-			result = MysqlDump(dbConn.Db_name)
+			result = MysqlDump(backup, &dbConn)
 		} else {
 			return createErrorResponse(ctx, 400, "Invalid database type")
 		}
