@@ -18,6 +18,7 @@ func InitDB() {
 		Net:    "tcp",
 		Addr:   "localhost:3306",
 		DBName: "safebase",
+		AllowNativePasswords: true,
 	}
 
 	DB, err = sql.Open("mysql", config.FormatDSN())
