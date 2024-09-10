@@ -49,13 +49,17 @@ func AddRoutes(app *fiber.App) {
 		}
 
 		connection := connection.ConnectionModel{}
-		connection = connection.GetById(backup.Connection_id)
+		dbConn, error := connection.GetById(backup.Connection_id)
 
+		if error != nil {
+			return createErrorResponse(ctx, 404, "Connection not found")
+		}
+		
 		var result string
-		if connection.Db_type == "postgres" {
-			result = PostgresDump(connection.Db_name)
-		} else if connection.Db_type == "mysql" {
-			result = MysqlDump(connection.Db_name)
+		if dbConn.Db_type == "postgres" {
+			result = PostgresDump(dbConn.Db_name)
+		} else if dbConn.Db_type == "mysql" {
+			result = MysqlDump(dbConn.Db_name)
 		} else {
 			return createErrorResponse(ctx, 400, "Invalid database type")
 		}
