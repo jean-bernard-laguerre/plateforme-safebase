@@ -10,4 +10,5 @@ type DumpModel struct {
 	Cron_job      string
 	Connection_id int
 	Created_at    time.Time
+	Active        bool
 }

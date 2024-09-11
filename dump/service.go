@@ -21,7 +21,7 @@ func PostgresDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
 	containerName := "MyPOSTGRES"
 	databaseName := c.Db_name
-	time := time.Now().Local().Format("2006-01-02T15:04:05")
+	time := time.Now().Local().Format("2006-01-02T15-04-05")
 	fileName := databaseName + "_" + time + ".sql"
 	cmd := exec.Command("docker", "exec", containerName, "pg_dump", "-U", "postgres", "-d", databaseName)
 	outfile, err := os.Create("./backups/postgres/" + fileName)
@@ -41,7 +41,7 @@ func MysqlDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
 	containerName := "MyMYSQL"
 	databaseName := c.Db_name
-	time := time.Now().Local().Format("2006-01-02T15:04:05")
+	time := time.Now().Local().Format("2006-01-02T15-04-05")
 	fileName := databaseName + "_" + time + ".sql"
 
 	cmd := exec.Command("docker", "exec", containerName, "mysqldump", "--user", "root", "--password=verysecure", databaseName)

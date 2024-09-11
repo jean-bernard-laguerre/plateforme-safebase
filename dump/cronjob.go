@@ -8,6 +8,7 @@ import (
 )
 
 var Cr *cron.Cron
+var cronList = make(map[int]cron.EntryID)
 
 func InitCron() {
 	fmt.Print("Cron job started")
@@ -19,7 +20,7 @@ func InitCron() {
 
 	Cr = cron.New()
 	for _, d := range dumps {
-		Cr.AddFunc(d.Cron_job, func() {
+		id, _ := Cr.AddFunc(d.Cron_job, func() {
 			connection := connection.ConnectionModel{}
 			dbConn, error := connection.GetById(d.Connection_id)
 			if error != nil {
@@ -35,18 +36,21 @@ func InitCron() {
 			}
 			fmt.Print(result)
 		})
+		cronList[d.Id] = id
 	}
+	fmt.Print(cronList)
 	Cr.Start()
 
 }
 
-func AddCronJob(cronJob string, id int) {
+func AddCronJob(cronJob string, co_id int, id int) {
 	connection := connection.ConnectionModel{}
-	dbConn, error := connection.GetById(id)
+	dbConn, error := connection.GetById(co_id)
 	if error != nil {
 		fmt.Print(error)
 	}
-	Cr.AddFunc(cronJob, func() {
+
+	cronID, _ := Cr.AddFunc(cronJob, func() {
 		var result string
 		if dbConn.Db_type == "postgres" {
 			result = PostgresDump(&dbConn)
@@ -57,5 +61,12 @@ func AddCronJob(cronJob string, id int) {
 		}
 		fmt.Print(result)
 	})
+	cronList[int(id)] = cronID
 
+}
+
+func RemoveCronJob(id int) {
+	Cr.Remove(cronList[id])
+	inspect := Cr.Entries()
+	fmt.Print(inspect)
 }

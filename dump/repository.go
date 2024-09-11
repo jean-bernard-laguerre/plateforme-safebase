@@ -5,12 +5,21 @@ import (
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 )
 
-func (d *DumpModel) Create(name string, cron_job string, connection_id int) (bool, error) {
-	_, err := config.DB.Exec("INSERT INTO backup ( name, cron_job, connection_id, created_at) VALUES( ?, ?, ?, NOW())", name, cron_job, connection_id)
+func (d *DumpModel) Create(name string, cron_job string, connection_id int) (int, error) {
+	task, err := config.DB.Exec("INSERT INTO backup ( name, cron_job, connection_id, created_at) VALUES( ?, ?, ?, NOW())", name, cron_job, connection_id)
 	if err != nil {
-		return false, err
+		return 0, err
 	}
-	return true, nil
+	id, _ := task.LastInsertId()
+	return int(id), nil
+}
+
+func (d *DumpModel) GetById(id int) (DumpModel, error) {
+	err := config.DB.QueryRow("SELECT * FROM backup WHERE id = ?", id).Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at, &d.Active)
+	if err != nil {
+		return DumpModel{}, err
+	}
+	return *d, nil
 }
 
 func (d *DumpModel) GetAll() ([]DumpModel, error) {
@@ -24,13 +33,21 @@ func (d *DumpModel) GetAll() ([]DumpModel, error) {
 
 	for rows.Next() {
 		var d DumpModel
-		err := rows.Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at)
+		err := rows.Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at, &d.Active)
 		if err != nil {
 			return []DumpModel{}, err
 		}
 		backups = append(backups, d)
 	}
 	return backups, nil
+}
+
+func (d *DumpModel) Update(id int, active bool) (bool, error) {
+	_, err := config.DB.Exec("UPDATE backup SET active = ? WHERE id = ?", active, id)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func (d *DumpModel) Delete(id int) (bool, error) {
