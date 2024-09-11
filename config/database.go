@@ -13,12 +13,13 @@ func InitDB() {
 	var err error
 
 	config := mysql.Config{
-		User:   "root",
-		Passwd: "",
-		Net:    "tcp",
-		Addr:   "localhost:3306",
-		DBName: "safebase",
+		User:                 "root",
+		Passwd:               "",
+		Net:                  "tcp",
+		Addr:                 "localhost:3306",
+		DBName:               "safebase",
 		AllowNativePasswords: true,
+		ParseTime:            true,
 	}
 
 	DB, err = sql.Open("mysql", config.FormatDSN())
