@@ -5,18 +5,17 @@ import (
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 )
 
-//to create an history
-func (h* HistoryModel ) Create(name string, status bool, action string, created_at string, bdd_source int, bdd_target *int) (bool, error) {
+// to create an history
+func (h *HistoryModel) Create(name string, status bool, action string, created_at string, bdd_source int, bdd_target *int) (bool, error) {
 	_, err := config.DB.Exec("INSERT INTO history (name, status, action, created_at, bdd_source, bdd_target) VALUES(?, ?, ?, ?, ?, ?)", name, status, action, created_at, bdd_source, bdd_target)
 	if err != nil {
 		return false, err
 	}
 	return true, nil
-} 
+}
 
-
-// to get all histories
-func (h* HistoryModel) GetAll() ([]HistoryModel, error) {
+// TODO :=> TEST THIS FUNCTION
+func (h *HistoryModel) GetAll() ([]HistoryModel, error) {
 	rows, err := config.DB.Query("SELECT * FROM history")
 	if err != nil {
 		return []HistoryModel{}, err
@@ -37,9 +36,8 @@ func (h* HistoryModel) GetAll() ([]HistoryModel, error) {
 	return histories, nil
 }
 
-
 // To delete a history
-func (h* HistoryModel) Delete(id int) (bool, error) {
+func (h *HistoryModel) Delete(id int) (bool, error) {
 	_, err := config.DB.Exec("DELETE FROM history WHERE id = ?", id)
 	if err != nil {
 		return false, err

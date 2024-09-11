@@ -23,8 +23,9 @@ func main() {
 
 	//Add Backup routes
 	dump.AddRoutes(app)
-	
 
+	// Start cronjob
+	dump.InitCron()
 
 	// Start server on http://localhost:3000
 	app.Listen(":3000")

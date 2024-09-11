@@ -1,13 +1,13 @@
 package dump
 
-import "cloud.google.com/go/civil"
-
+import (
+	"time"
+)
 
 type DumpModel struct {
-	Id	   int
-	Name	 string
-	Cron_job  *string
+	Id            int
+	Name          string
+	Cron_job      string
 	Connection_id int
-	Created_at civil.DateTime
+	Created_at    time.Time
 }
-
