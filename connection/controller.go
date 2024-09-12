@@ -8,18 +8,15 @@ func AddRoutes(app *fiber.App) {
 
 	co := app.Group("/connection")
 
-	co.Get("/test/:id", func(ctx *fiber.Ctx) error {
-		id, err := ctx.ParamsInt("id")
-		if err != nil {
+	co.Post("/test", func(ctx *fiber.Ctx) error {
+		conn := new(ConnectionModel)
+		if err := ctx.BodyParser(conn); err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
 				"error":   err,
 			})
 		}
-		conn := ConnectionModel{}
-		testConn, err := conn.GetById(id)
-
-		coValid, err := TestConnection(testConn)
+		coValid, err := TestConnection(*conn)
 		if coValid {
 			return ctx.Status(200).JSON(fiber.Map{
 				"success": true,
