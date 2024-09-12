@@ -3,12 +3,13 @@ package dump
 import (
 	"fmt"
 
+	"github.com/go-co-op/gocron/v2"
+	"github.com/google/uuid"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
-	"github.com/robfig/cron/v3"
 )
 
-var Cr *cron.Cron
-var cronList = make(map[int]cron.EntryID)
+var Cr gocron.Scheduler
+var cronList = make(map[int]uuid.UUID)
 
 func InitCron() {
 	fmt.Print("Cron job started")
@@ -18,25 +19,30 @@ func InitCron() {
 		fmt.Print(err)
 	}
 
-	Cr = cron.New()
+	Cr, _ = gocron.NewScheduler()
 	for _, d := range dumps {
-		id, _ := Cr.AddFunc(d.Cron_job, func() {
-			connection := connection.ConnectionModel{}
-			dbConn, error := connection.GetById(d.Connection_id)
-			if error != nil {
-				fmt.Print(error)
-			}
-			var result string
-			if dbConn.Db_type == "postgres" {
-				result = PostgresDump(&dbConn)
-			} else if dbConn.Db_type == "mysql" {
-				result = MysqlDump(&dbConn)
-			} else {
-				fmt.Print("Invalid database type")
-			}
-			fmt.Print(result)
-		})
-		cronList[d.Id] = id
+
+		job, _ := Cr.NewJob(
+			gocron.CronJob(d.Cron_job, false),
+			gocron.NewTask(func() {
+				connection := connection.ConnectionModel{}
+				dbConn, error := connection.GetById(d.Connection_id)
+				if error != nil {
+					fmt.Print(error)
+				}
+				var result string
+				if dbConn.Db_type == "postgres" {
+					result = PostgresDump(&dbConn)
+				} else if dbConn.Db_type == "mysql" {
+					result = MysqlDump(&dbConn)
+				} else {
+					fmt.Print("Invalid database type")
+				}
+				fmt.Print(result)
+			}),
+		)
+
+		cronList[d.Id] = job.ID()
 	}
 	fmt.Print(cronList)
 	Cr.Start()
@@ -50,23 +56,26 @@ func AddCronJob(cronJob string, co_id int, id int) {
 		fmt.Print(error)
 	}
 
-	cronID, _ := Cr.AddFunc(cronJob, func() {
-		var result string
-		if dbConn.Db_type == "postgres" {
-			result = PostgresDump(&dbConn)
-		} else if dbConn.Db_type == "mysql" {
-			result = MysqlDump(&dbConn)
-		} else {
-			fmt.Print("Invalid database type")
-		}
-		fmt.Print(result)
-	})
-	cronList[int(id)] = cronID
+	NewJob, _ := Cr.NewJob(
+		gocron.CronJob(cronJob, false),
+		gocron.NewTask(func() {
+			var result string
+			if dbConn.Db_type == "postgres" {
+				result = PostgresDump(&dbConn)
+			} else if dbConn.Db_type == "mysql" {
+				result = MysqlDump(&dbConn)
+			} else {
+				fmt.Print("Invalid database type")
+			}
+			fmt.Print(result)
+		}),
+	)
+
+	cronList[int(id)] = NewJob.ID()
 
 }
 
 func RemoveCronJob(id int) {
-	Cr.Remove(cronList[id])
-	inspect := Cr.Entries()
-	fmt.Print(inspect)
+	Cr.RemoveJob(cronList[id])
+	delete(cronList, id)
 }

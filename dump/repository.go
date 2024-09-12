@@ -1,6 +1,8 @@
 package dump
 
 import (
+	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 )
@@ -43,6 +45,7 @@ func (d *DumpModel) GetAll() ([]DumpModel, error) {
 }
 
 func (d *DumpModel) Update(id int, active bool) (bool, error) {
+	fmt.Println(active)
 	_, err := config.DB.Exec("UPDATE backup SET active = ? WHERE id = ?", active, id)
 	if err != nil {
 		return false, err

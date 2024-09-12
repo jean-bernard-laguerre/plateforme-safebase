@@ -19,7 +19,7 @@ func SaveHistory(name string, status bool, action string, created_at string, bdd
 
 func PostgresDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
-	containerName := "MyPOSTGRES"
+	containerName := "safebasePostgres"
 	databaseName := c.Db_name
 	time := time.Now().Local().Format("2006-01-02T15-04-05")
 	fileName := databaseName + "_" + time + ".sql"
@@ -39,12 +39,12 @@ func PostgresDump(c *connection.ConnectionModel) string {
 
 func MysqlDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
-	containerName := "MyMYSQL"
+	containerName := "safebasemysql"
 	databaseName := c.Db_name
 	time := time.Now().Local().Format("2006-01-02T15-04-05")
 	fileName := databaseName + "_" + time + ".sql"
 
-	cmd := exec.Command("docker", "exec", containerName, "mysqldump", "--user", "root", "--password=verysecure", databaseName)
+	cmd := exec.Command("docker", "exec", containerName, "mysqldump", "--user", "root", "--password="+c.Password, databaseName)
 	outfile, err := os.Create("./backups/mysql/" + fileName)
 	defer outfile.Close()
 	cmd.Stdout = outfile
