@@ -26,7 +26,9 @@ func createSuccessResponse(ctx *fiber.Ctx, message string) error {
 
 func AddRoutes(app *fiber.App) {
 
-	app.Post("/task", func(ctx *fiber.Ctx) error {
+	du := app.Group("/dump")
+
+	du.Post("/task", func(ctx *fiber.Ctx) error {
 		tasks := new(DumpModel)
 		if err := ctx.BodyParser(tasks); err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
@@ -45,16 +47,16 @@ func AddRoutes(app *fiber.App) {
 
 	})
 
-	app.Get("/task/:id", func(ctx *fiber.Ctx) error {
-		id, err := ctx.ParamsInt("id")
-		if err != nil {
-			return createErrorResponse(ctx, 400, "Invalid input")
-		}
-		RemoveCronJob(id)
-		return createSuccessResponse(ctx, "Task paused successfully")
-	})
+	// du.Get("/task/:id", func(ctx *fiber.Ctx) error {
+	// 	id, err := ctx.ParamsInt("id")
+	// 	if err != nil {
+	// 		return createErrorResponse(ctx, 400, "Invalid input")
+	// 	}
+	// 	RemoveCronJob(id)
+	// 	return createSuccessResponse(ctx, "Task paused successfully")
+	// })
 
-	app.Patch("/task/:id", func(ctx *fiber.Ctx) error {
+	du.Patch("/task/:id", func(ctx *fiber.Ctx) error {
 		id, err := ctx.ParamsInt("id")
 		if err != nil {
 			return createErrorResponse(ctx, 400, "Invalid input"+err.Error())
@@ -75,7 +77,7 @@ func AddRoutes(app *fiber.App) {
 		}
 	})
 
-	app.Get("/backups", func(ctx *fiber.Ctx) error {
+	du.Get("/", func(ctx *fiber.Ctx) error {
 		backup := new(DumpModel)
 		if err := ctx.BodyParser(backup); err != nil {
 			return ctx.Status(200).JSON(fiber.Map{
@@ -90,7 +92,7 @@ func AddRoutes(app *fiber.App) {
 		}
 	})
 
-	app.Get("/backup/:id", func(ctx *fiber.Ctx) error {
+	du.Get("/run/:id", func(ctx *fiber.Ctx) error {
 
 		id, _ := ctx.ParamsInt("id")
 
@@ -118,7 +120,7 @@ func AddRoutes(app *fiber.App) {
 
 	})
 
-	app.Delete("/backup/:id", func(ctx *fiber.Ctx) error {
+	du.Delete("/:id", func(ctx *fiber.Ctx) error {
 		id, err := ctx.ParamsInt("id")
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
