@@ -1,8 +1,8 @@
 import instance from "./config";
 
 interface Task {
-  Name: "string";
-  Cron_job: "string";
+  Name: string;
+  Cron_job: string;
   Connection_id: number;
   Created_at: Date;
   Active: boolean;
@@ -29,6 +29,39 @@ export const actions = {
       return response.data;
     } catch (err) {
       console.log("erreur lors du toggle de la task:", err);
+      return err;
+    }
+  },
+
+  //Get all Tasks
+  async getAll() {
+    try {
+      const response = await instance.get("/dump");
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors de la récupération des tâches:", err);
+      return err;
+    }
+  },
+
+  //Run a dump
+  async dump(id: number) {
+    try {
+      const response = await instance.get(`/dump/run/${id}`);
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors du dump de la base:", err);
+      return err;
+    }
+  },
+
+  //Delete a task
+  async deleteTask(id: number) {
+    try {
+      const response = await instance.delete(`/dump/${id}`);
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors de la suppression de la tâche:", err);
       return err;
     }
   },
