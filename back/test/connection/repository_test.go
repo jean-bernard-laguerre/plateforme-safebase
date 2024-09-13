@@ -1,45 +1,50 @@
 package connection_test
 
 import (
-	"database/sql"
+	"fmt"
 	"testing"
 
-	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/test"
 )
 
-func setupTestDB() (*sql.DB, error) {
-	config := mysql.Config{
-		User:                 "root",
-		Passwd:               "",
-		Net:                  "tcp",
-		Addr:                 "localhost:3306",
-		DBName:               "safebase",
-		AllowNativePasswords: true,
-		ParseTime:            true,
-	}
-
-	db, err := sql.Open("mysql", config.FormatDSN())
-	if err != nil {
-		panic(err)
-	}
-	return db, nil
-}
-
-func TestRepository(t *testing.T) {
-	db, err := setupTestDB()
+func TestConnRepository(t *testing.T) {
+	db, err := test.SetupTestDB()
 	if err != nil {
 		t.Fatalf("setupTestDB failed: %v", err)
 	}
 	defer db.Close()
 
 	config.DB = db
+	var testId int
+	conn := connection.ConnectionModel{}
+
+	t.Run("Create", func(t *testing.T) {
+		created, err := conn.Create("test", "localhost", "3306", "root", "", "test", "mysql", 1)
+		if err != nil {
+			t.Fatalf("Create failed: %v", err)
+		}
+		if created == 0 {
+			t.Fatalf("Create failed")
+		}
+
+		testId = created
+
+		result, connErr := conn.GetById(testId)
+		if connErr != nil {
+			fmt.Println(connErr)
+			t.Fatalf("GetById failed: %v", connErr)
+		}
+		if result.Id != testId {
+			fmt.Println(result.Id)
+			t.Fatalf("Create failed")
+		}
+	})
 
 	t.Run("GetById", func(t *testing.T) {
-		conn := connection.ConnectionModel{}
-		result, err := conn.GetById(1)
+		result, err := conn.GetById(testId)
 		if err != nil {
 			t.Fatalf("GetById failed: %v", err)
 		}
@@ -49,7 +54,6 @@ func TestRepository(t *testing.T) {
 	})
 
 	t.Run("GetByUserId", func(t *testing.T) {
-		conn := connection.ConnectionModel{}
 		result, err := conn.GetByUserId(1)
 		if err != nil {
 			t.Fatalf("GetByUserId failed: %v", err)
@@ -58,30 +62,19 @@ func TestRepository(t *testing.T) {
 			t.Fatalf("GetByUserId failed")
 		}
 	})
-}
 
-func TestFailRepository(t *testing.T) {
-	db, err := setupTestDB()
-	if err != nil {
-		t.Fatalf("setupTestDB failed: %v", err)
-	}
-	defer db.Close()
-
-	config.DB = db
-
-	t.Run("GetById", func(t *testing.T) {
-		conn := connection.ConnectionModel{}
-		_, err := conn.GetById(100)
-		if err == nil {
-			t.Fatalf("GetById failed")
+	t.Run("Delete", func(t *testing.T) {
+		result, err := conn.Delete(testId)
+		if err != nil {
+			t.Fatalf("Delete failed: %v", err)
 		}
-	})
+		if result != true {
+			t.Fatalf("Delete failed")
+		}
 
-	t.Run("GetByUserId", func(t *testing.T) {
-		conn := connection.ConnectionModel{}
-		_, err := conn.GetByUserId(0)
-		if err == nil {
-			t.Fatalf("GetByUserId failed")
+		_, connErr := conn.GetById(testId)
+		if connErr == nil {
+			t.Fatalf("Delete failed")
 		}
 	})
 }

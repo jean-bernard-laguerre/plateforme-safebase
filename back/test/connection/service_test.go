@@ -6,7 +6,7 @@ import (
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
 )
 
-func TestDatabaseConnection(t *testing.T) {
+func TestConnService(t *testing.T) {
 	t.Run("TestConnectionMySql", func(t *testing.T) {
 		conn := connection.ConnectionModel{
 			Id:       1,
