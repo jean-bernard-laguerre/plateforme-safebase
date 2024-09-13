@@ -48,7 +48,7 @@ func TestConnRepository(t *testing.T) {
 		if err != nil {
 			t.Fatalf("GetById failed: %v", err)
 		}
-		if result.Id != 1 {
+		if result.Id != testId {
 			t.Fatalf("GetById failed")
 		}
 	})
