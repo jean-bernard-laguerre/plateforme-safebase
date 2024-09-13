@@ -2,6 +2,7 @@ package dump
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
 )
 
