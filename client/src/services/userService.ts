@@ -16,7 +16,9 @@ export const actions = {
     //   return err;
     // }
     const response = await instance.post("/register", JSON.stringify(user));
-    console.log("RESPONSE", response);
+    if (response.status === 400) {
+      console.log("RESPONSE", response);
+    }
   },
 
   //LOGIN
