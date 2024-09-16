@@ -28,10 +28,11 @@ func AddRoutes(app *fiber.App) {
 				"message": "User created successfully",
 			})
 		} else {
-			return c.Status(400).JSON(fiber.Map{
-				"success": false,
-				"message": "User already exists",
-			})
+			// return c.Status(400).JSON(fiber.Map{
+			// 	"success": false,
+			// 	"message": "User already exists",
+			// })
+			return fiber.NewError(fiber.StatusConflict, "User already exists")
 		}
 	})
 

@@ -8,16 +8,12 @@ interface User {
 export const actions = {
   //REGISTER
   async register(user: User) {
-    // try {
-    //   const response = await instance.post("/register", JSON.stringify(user));
-    //   return response.data;
-    // } catch (err) {
-    //   console.log("erreur lors de l'inscription:", err);
-    //   return err;
-    // }
-    const response = await instance.post("/register", JSON.stringify(user));
-    if (response.status === 400) {
-      console.log("RESPONSE", response);
+    try {
+      const response = await instance.post("/register", JSON.stringify(user));
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors de l'inscription:", err);
+      return err;
     }
   },
 
