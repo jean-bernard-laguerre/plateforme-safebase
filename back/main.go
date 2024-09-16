@@ -27,6 +27,15 @@ func main() {
 	// Start cronjob
 	dump.InitCron()
 
+	// Allow CORS
+	app.Use(func(c *fiber.Ctx) error {
+		c.Set("Access-Control-Allow-Origin", "*")
+		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+		c.Set("Access-Control-Allow-Headers", "Content-Type")
+		return c.Next()
+	})
+
+	
 	// Start server on http://localhost:3000
 	app.Listen(":3000")
 }
