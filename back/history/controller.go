@@ -30,15 +30,21 @@ func AddRoutes(app *fiber.App) {
 		params.Init()
 
 		if err := ctx.QueryParser(&params); err != nil {
-			return fiber.NewError(400, err.Error())
+			return ctx.Status(400).JSON(fiber.Map{
+				"error": err.Error(),
+			})
 		}
 		if err != nil {
-			return fiber.NewError(400, err.Error())
+			return ctx.Status(400).JSON(fiber.Map{
+				"error": err.Error(),
+			})
 		}
 		history := HistoryModel{}
 		histories, err := history.GetByUserId(id, params.Page, params.Limit)
 		if err != nil {
-			return fiber.NewError(400, err.Error())
+			return ctx.Status(400).JSON(fiber.Map{
+				"error": err.Error(),
+			})
 		}
 		return ctx.Status(200).JSON(fiber.Map{
 			"histories": histories,
