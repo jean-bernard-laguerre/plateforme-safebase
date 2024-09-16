@@ -9,16 +9,16 @@ func AddRoutes(app *fiber.App) {
 	hy := app.Group("/history")
 
 	hy.Get("/all", func(ctx *fiber.Ctx) error {
-		history := new(HistoryModel)
+		history := HistoryModel{}
 		histories, err := history.GetAll()
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
-				"error": err,
+				"error":   err,
 			})
 		}
 		return ctx.Status(200).JSON(fiber.Map{
-			"success": true,
+			"success":   true,
 			"histories": histories,
 		})
 	})

@@ -38,8 +38,8 @@ func AddRoutes(app *fiber.App) {
 				"error":   err,
 			})
 		}
-		success, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id)
-		if !success {
+		id, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id)
+		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
 				"error":   err,
@@ -48,6 +48,7 @@ func AddRoutes(app *fiber.App) {
 			return ctx.Status(201).JSON(fiber.Map{
 				"success": true,
 				"message": "Connection ajoutée",
+				"id":      id,
 			})
 		}
 	})

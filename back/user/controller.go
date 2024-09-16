@@ -22,17 +22,19 @@ func AddRoutes(app *fiber.App) {
 			})
 		}
 
-		if Register(user.Email, user.Password) {
-			return c.Status(200).JSON(fiber.Map{
-				"success": true,
-				"message": "User created successfully",
-			})
-		} else {
+		registered, err := Register(user.Email, user.Password)
+
+		if !registered {
 			return c.Status(400).JSON(fiber.Map{
 				"success": false,
-				"message": "User already exists",
+				"message": err.Error(),
 			})
 		}
+
+		return c.Status(200).JSON(fiber.Map{
+			"success": true,
+			"message": "User created successfully",
+		})
 	})
 
 	app.Post("/login", func(c *fiber.Ctx) error {

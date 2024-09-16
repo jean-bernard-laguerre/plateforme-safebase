@@ -6,6 +6,7 @@ import (
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/dump"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/history"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/user"
 )
 
@@ -20,9 +21,8 @@ func main() {
 	// Add routes
 	user.AddRoutes(app)
 	connection.AddRoutes(app)
-
-	//Add Backup routes
 	dump.AddRoutes(app)
+	history.AddRoutes(app)
 
 	// Start cronjob
 	dump.InitCron()
