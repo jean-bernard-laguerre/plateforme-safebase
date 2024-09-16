@@ -44,6 +44,8 @@ func MysqlDump(c *connection.ConnectionModel) string {
 	time := time.Now().Local().Format("2006-01-02T15-04-05")
 	fileName := databaseName + "_" + time + ".sql"
 
+	//TODO: avec DOCKER compose
+	//msqldump -h safebasemysql --port 3306 -u root --password=verysafe myDb
 	cmd := exec.Command("docker", "exec", containerName, "mysqldump", "--user", "root", "--password="+c.Password, databaseName)
 	outfile, err := os.Create("./backups/mysql/" + fileName)
 	defer outfile.Close()
