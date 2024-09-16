@@ -9,10 +9,9 @@ import (
 )
 
 var Cr gocron.Scheduler
-var cronList = make(map[int]uuid.UUID)
+var CronList = make(map[int]uuid.UUID)
 
 func InitCron() {
-	fmt.Print("Cron job started")
 	dumpModel := DumpModel{}
 	dumps, err := dumpModel.GetAll()
 	if err != nil {
@@ -21,7 +20,9 @@ func InitCron() {
 
 	Cr, _ = gocron.NewScheduler()
 	for _, d := range dumps {
-
+		if !d.Active {
+			continue
+		}
 		job, _ := Cr.NewJob(
 			gocron.CronJob(d.Cron_job, false),
 			gocron.NewTask(func() {
@@ -42,9 +43,9 @@ func InitCron() {
 			}),
 		)
 
-		cronList[d.Id] = job.ID()
+		CronList[d.Id] = job.ID()
 	}
-	fmt.Print(cronList)
+	fmt.Print(CronList)
 	Cr.Start()
 
 }
@@ -71,11 +72,11 @@ func AddCronJob(cronJob string, co_id int, id int) {
 		}),
 	)
 
-	cronList[int(id)] = NewJob.ID()
+	CronList[int(id)] = NewJob.ID()
 
 }
 
 func RemoveCronJob(id int) {
-	Cr.RemoveJob(cronList[id])
-	delete(cronList, id)
+	Cr.RemoveJob(CronList[id])
+	delete(CronList, id)
 }
