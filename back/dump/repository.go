@@ -44,6 +44,30 @@ func (d *DumpModel) GetAll() ([]DumpModel, error) {
 	return backups, nil
 }
 
+func (d *DumpModel) GetByUserId(userId int) ([]DumpModel, error) {
+	rows, err := config.DB.Query(`
+		SELECT backup.id, backup.name, backup.cron_job, backup.connection_id, backup.created_at, backup.active
+		FROM backup
+		Join connection ON backup.connection_id = connection.id
+		WHERE connection.user_id = ?`, userId)
+	if err != nil {
+		return []DumpModel{}, err
+	}
+	defer rows.Close()
+
+	backups := []DumpModel{}
+
+	for rows.Next() {
+		var d DumpModel
+		err := rows.Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at, &d.Active)
+		if err != nil {
+			return []DumpModel{}, err
+		}
+		backups = append(backups, d)
+	}
+	return backups, nil
+}
+
 func (d *DumpModel) Update(id int, active bool) (bool, error) {
 	fmt.Println(active)
 	_, err := config.DB.Exec("UPDATE backup SET active = ? WHERE id = ?", active, id)

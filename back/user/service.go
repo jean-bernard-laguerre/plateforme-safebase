@@ -16,7 +16,6 @@ func Register(email string, password string) (bool, error) {
 	if newUser == 0 {
 		return false, fmt.Errorf("Email already exists")
 	} else {
-		fmt.Println("User created successfully")
 		return true, nil
 	}
 }
@@ -34,7 +33,5 @@ func Login(email string, password string) (UserModel, error) {
 		return user, fmt.Errorf("Incorrect password")
 
 	}
-
-	fmt.Println("Login successful")
 	return user, nil
 }
