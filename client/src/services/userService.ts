@@ -1,3 +1,4 @@
+import axios from "axios";
 import instance from "./config";
 
 interface User {
@@ -12,8 +13,13 @@ export const actions = {
       const response = await instance.post("/register", JSON.stringify(user));
       return response.data;
     } catch (err) {
-      console.log("erreur lors de l'inscription:", err);
-      return err;
+      if (axios.isAxiosError(err)) {
+        console.log("erreur lors de l'inscription:", err.response?.data);
+        return err.response?.data;
+      } else {
+        console.log("erreur lors de l'inscription:", err);
+        return err;
+      }
     }
   },
 

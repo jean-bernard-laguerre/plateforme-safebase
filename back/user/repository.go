@@ -14,7 +14,7 @@ func (u *UserModel) Create(
 	if validation.Email != "" {
 		return false
 	}
-	_, err := config.DB.Exec("INSERT INTO user(email, password) VALUES(?, ?)", email, password)
+	_, err := config.DB.Exec("INSERT INTO users(email, password) VALUES(?, ?)", email, password)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -25,7 +25,7 @@ func (u *UserModel) Create(
 }
 
 func (u UserModel) GetById(id int) UserModel {
-	err := config.DB.QueryRow("SELECT * FROM user WHERE id = ?", id).Scan(
+	err := config.DB.QueryRow("SELECT * FROM users WHERE id = ?", id).Scan(
 		&u.Id, &u.Email, &u.Password)
 	if err != nil {
 		fmt.Println(err)
@@ -34,7 +34,7 @@ func (u UserModel) GetById(id int) UserModel {
 }
 
 func (u UserModel) GetByEmail(email string) UserModel {
-	err := config.DB.QueryRow("SELECT * FROM user WHERE email = ?", email).Scan(
+	err := config.DB.QueryRow("SELECT * FROM users WHERE email = ?", email).Scan(
 		&u.Id, &u.Email, &u.Password)
 	if err != nil {
 		fmt.Println(err)

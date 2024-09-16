@@ -1,6 +1,6 @@
 "use client";
 import { actions } from "@/services/userService";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface User {
   email: string;
@@ -14,7 +14,11 @@ interface Error {
   confpassword: string;
 }
 
-function Signup() {
+interface SignupProps {
+  setAuth: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Signup: React.FC<SignupProps> = ({ setAuth }) => {
   const [user, setUser] = useState<User>({
     email: "",
     password: "",
@@ -57,6 +61,20 @@ function Signup() {
     }
     const response = await actions.register(user);
     console.log(response);
+    if (response.success === false) {
+      if (response?.message == "User already exists") {
+        console.log("Cet utilisateur existe déjà");
+        setError({ ...error, email: "Cet utilisateur existe déjà" });
+        return;
+      } else {
+        console.log("Erreur lors de l'inscription");
+        return;
+      }
+    } else {
+      console.log("Utilisateur créé");
+      setAuth(true);
+      return;
+    }
   }
 
   return (
@@ -114,8 +132,11 @@ function Signup() {
           }}
         />
       </form>
+      <button onClick={() => setAuth(false)}>
+        Déjà inscrit? Connectez-vous!
+      </button>
     </div>
   );
-}
+};
 
 export default Signup;

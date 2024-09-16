@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
@@ -16,6 +17,11 @@ func main() {
 
 	// Create a new Fiber instance
 	app := fiber.New()
+	// Allow CORS
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 
 	// Add routes
 	user.AddRoutes(app)
@@ -27,15 +33,6 @@ func main() {
 	// Start cronjob
 	dump.InitCron()
 
-	// Allow CORS
-	app.Use(func(c *fiber.Ctx) error {
-		c.Set("Access-Control-Allow-Origin", "*")
-		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
-		c.Set("Access-Control-Allow-Headers", "Content-Type")
-		return c.Next()
-	})
-
-	
 	// Start server on http://localhost:3000
 	app.Listen(":3000")
 }
