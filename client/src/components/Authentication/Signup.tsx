@@ -60,7 +60,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
       return;
     }
     const response = await actions.register(user);
-    console.log(response);
+
     if (response.success === false) {
       if (response?.message == "User already exists") {
         console.log("Cet utilisateur existe déjà");

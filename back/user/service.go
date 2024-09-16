@@ -16,6 +16,8 @@ func Register(email string, password string) bool {
 func Login(email string, password string) (UserModel, error) {
 	user := UserModel{}
 	user = user.GetByEmail(email)
+	fmt.Println(password)
+	fmt.Println(user.Password)
 
 	if user.Email == "" {
 		fmt.Println("Email does not exist")
