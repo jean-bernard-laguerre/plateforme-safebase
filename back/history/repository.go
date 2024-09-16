@@ -6,12 +6,13 @@ import (
 )
 
 // to create an history
-func (h *HistoryModel) Create(name string, status bool, action string, created_at string, bdd_source int, bdd_target *int) (bool, error) {
-	_, err := config.DB.Exec("INSERT INTO history (name, status, action, created_at, bdd_source, bdd_target) VALUES(?, ?, ?, ?, ?, ?)", name, status, action, created_at, bdd_source, bdd_target)
+func (h *HistoryModel) Create(name string, status bool, action string, created_at string, bdd_source int, bdd_target *int) (int, error) {
+	result, err := config.DB.Exec("INSERT INTO history (name, status, action, created_at, bdd_source, bdd_target) VALUES(?, ?, ?, ?, ?, ?)", name, status, action, created_at, bdd_source, bdd_target)
 	if err != nil {
-		return false, err
+		return 0, err
 	}
-	return true, nil
+	id, _ := result.LastInsertId()
+	return int(id), nil
 }
 
 // TODO :=> TEST THIS FUNCTION
