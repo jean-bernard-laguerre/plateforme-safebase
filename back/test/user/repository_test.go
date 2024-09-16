@@ -38,15 +38,20 @@ func TestUserRepository(t *testing.T) {
 
 	t.Run("GetById", func(t *testing.T) {
 		result := user.GetById(1)
-		if result.Id != testId {
-			t.Fatalf("GetById failed")
+		if result.Id != 1 {
+			t.Fatalf("GetById failed: %v", result.Id)
 		}
 	})
 
 	t.Run("GetByEmail", func(t *testing.T) {
-		result := user.GetByEmail("john@doe.com")
+		result, err := user.GetByEmail("john@doe.com")
+
+		if err != nil {
+			t.Fatalf("GetByEmail failed: %v", err)
+		}
+
 		if result.Email != "john@doe.com" {
-			t.Fatalf("GetByEmail failed")
+			t.Fatalf("GetByEmail failed: %v", result.Email)
 		}
 	})
 

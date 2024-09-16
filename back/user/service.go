@@ -23,7 +23,7 @@ func Register(email string, password string) (bool, error) {
 
 func Login(email string, password string) (UserModel, error) {
 	user := UserModel{}
-	user = user.GetByEmail(email)
+	user, _ = user.GetByEmail(email)
 
 	if user.Email == "" {
 		fmt.Println("Email does not exist")

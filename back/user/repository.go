@@ -10,7 +10,7 @@ import (
 func (u *UserModel) Create(
 	email string, password string,
 ) (int, error) {
-	validation := u.GetByEmail(email)
+	validation, _ := u.GetByEmail(email)
 	if validation.Email != "" {
 		return 0, fmt.Errorf("Email already exists")
 	}
@@ -33,13 +33,13 @@ func (u UserModel) GetById(id int) UserModel {
 	return u
 }
 
-func (u UserModel) GetByEmail(email string) UserModel {
+func (u UserModel) GetByEmail(email string) (UserModel, error) {
 	err := config.DB.QueryRow("SELECT * FROM user WHERE email = ?", email).Scan(
 		&u.Id, &u.Email, &u.Password)
 	if err != nil {
-		fmt.Println(err)
+		return u, err
 	}
-	return u
+	return u, nil
 }
 
 /* func (u *UserModel) GetAll() []UserModel {

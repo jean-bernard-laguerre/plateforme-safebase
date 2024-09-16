@@ -34,7 +34,7 @@ func TestUserService(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		toDelete := model.GetByEmail("john@doeTest.com")
+		toDelete, _ := model.GetByEmail("john@doeTest.com")
 		_, err := model.Delete(toDelete.Id)
 
 		if err != nil {
