@@ -30,10 +30,10 @@ export const actions = {
       return response.data;
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.log("erreur lors de la connexion:", err.response?.data);
+        console.log("erreur lors de la connection:", err.response?.data);
         return err.response?.data;
       } else {
-        console.log("erreur lors de la connexion:", err);
+        console.log("erreur lors de la connection:", err);
         return err;
       }
     }
