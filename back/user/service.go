@@ -4,12 +4,20 @@ import (
 	"fmt"
 )
 
-func Register(email string, password string) bool {
+func Register(email string, password string) (bool, error) {
 	user := UserModel{}
-	if user.Create(email, password) {
-		return true
+	newUser, err := user.Create(email, password)
+
+	if err != nil {
+		fmt.Println(err)
+		return false, err
+	}
+
+	if newUser == 0 {
+		return false, fmt.Errorf("Email already exists")
 	} else {
-		return false
+		fmt.Println("User created successfully")
+		return true, nil
 	}
 }
 
