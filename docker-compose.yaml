@@ -7,9 +7,9 @@ services:
       context: ./back
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "3000:3000"
     volumes:
-      - ./back/volumes/safebase:/app
+      - ./back:/app
     environment:
       - NODE_ENV=development
     depends_on:
@@ -23,7 +23,7 @@ services:
     ports:
       - "3309:3306"
     volumes:
-      - ./back/volumes/mysql:/var/lib/mysql
+      - ./volumes/mysql:/var/lib/mysql
 
   postgres:
     image: postgres
@@ -33,16 +33,16 @@ services:
     ports:
       - "3308:5432"
     volumes:
-      - ./back/volumes/postgres:/var/lib/postgresql/data
+      - ./volumes/postgres:/var/lib/postgresql/data
 
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "8000:3000"
     volumes:
-      - ./client/volumes/safebase:/app
+      - ./client:/app
     environment:
       - NODE_ENV=development
     depends_on:
