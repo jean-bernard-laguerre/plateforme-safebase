@@ -54,7 +54,5 @@ func (c ConnectionModel) Delete(id int) (bool, error) {
 		fmt.Println(err)
 		return false, err
 	}
-
-	fmt.Println("Connection deleted")
 	return true, nil
 }

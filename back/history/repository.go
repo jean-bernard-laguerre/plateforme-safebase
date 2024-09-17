@@ -37,6 +37,32 @@ func (h *HistoryModel) GetAll() ([]HistoryModel, error) {
 	return histories, nil
 }
 
+func (h *HistoryModel) GetByUserId(userId int, page int, limit int) ([]HistoryModel, error) {
+	rows, err := config.DB.Query(`
+		SELECT history.id, history.name, history.status, history.action, history.created_at, history.bdd_source, history.bdd_target
+		FROM history
+		Join connection ON history.bdd_source = connection.id
+		WHERE connection.user_id = ?
+		LIMIT ? OFFSET ?`, userId, limit, page)
+	if err != nil {
+		return []HistoryModel{}, err
+	}
+	defer rows.Close()
+
+	histories := []HistoryModel{}
+
+	for rows.Next() {
+		var h HistoryModel
+		err := rows.Scan(&h.Id, &h.Name, &h.Status, &h.Action, &h.Created_at, &h.Bdd_source, &h.Bdd_target)
+		if err != nil {
+			return []HistoryModel{}, err
+		}
+		histories = append(histories, h)
+	}
+
+	return histories, nil
+}
+
 // To delete a history
 func (h *HistoryModel) Delete(id int) (bool, error) {
 	_, err := config.DB.Exec("DELETE FROM history WHERE id = ?", id)

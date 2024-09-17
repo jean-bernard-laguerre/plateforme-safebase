@@ -97,6 +97,21 @@ func AddRoutes(app *fiber.App) {
 		})
 	})
 
+	du.Get("/user/:id", func(ctx *fiber.Ctx) error {
+		id, err := ctx.ParamsInt("id")
+
+		backup := new(DumpModel)
+		backups, err := backup.GetByUserId(id)
+
+		if err != nil {
+			return fiber.NewError(500, "Internal server error")
+		}
+
+		return ctx.Status(200).JSON(fiber.Map{
+			"data": backups,
+		})
+	})
+
 	du.Get("/run/:id", func(ctx *fiber.Ctx) error {
 
 		id, _ := ctx.ParamsInt("id")

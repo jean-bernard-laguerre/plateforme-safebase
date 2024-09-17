@@ -17,7 +17,6 @@ func AddRoutes(app *fiber.App) {
 		user := new(UserModel)
 		if err := c.BodyParser(user); err != nil {
 			return c.Status(400).JSON(fiber.Map{
-				"success": false,
 				"message": "Invalid input",
 			})
 		}
@@ -26,13 +25,11 @@ func AddRoutes(app *fiber.App) {
 
 		if !registered {
 			return c.Status(400).JSON(fiber.Map{
-				"success": false,
 				"message": err.Error(),
 			})
 		}
 
 		return c.Status(200).JSON(fiber.Map{
-			"success": true,
 			"message": "User created successfully",
 		})
 	})
@@ -41,7 +38,6 @@ func AddRoutes(app *fiber.App) {
 		user := new(UserModel)
 		if err := c.BodyParser(user); err != nil {
 			return c.Status(400).JSON(fiber.Map{
-				"success": false,
 				"message": "Invalid input",
 			})
 		}
@@ -49,15 +45,12 @@ func AddRoutes(app *fiber.App) {
 		u, err := Login(user.Email, user.Password)
 		if err != nil {
 			return c.Status(400).JSON(fiber.Map{
-				"success": false,
 				"message": err.Error(),
 			})
 		}
 
 		return c.Status(200).JSON(fiber.Map{
-			"success": true,
-			"message": "User logged in",
-			"user":    u,
+			"user": u,
 		})
 	})
 }

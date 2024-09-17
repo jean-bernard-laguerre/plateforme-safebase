@@ -69,6 +69,5 @@ func (u *UserModel) Delete(id int) (bool, error) {
 		fmt.Println(err)
 		return false, err
 	}
-	fmt.Println("User deleted successfully")
 	return true, nil
 }
