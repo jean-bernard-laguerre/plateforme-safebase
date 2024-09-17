@@ -65,7 +65,7 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
     }
   }
   return (
-    <div>
+    <div className=" absolute top-1/3 left-1/3 ">
       <form action="post" className="bg-violet-400">
         <input
           type="text"
