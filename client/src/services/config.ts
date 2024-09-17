@@ -8,4 +8,14 @@ const instance = axios.create({
   },
 });
 
+// ajouter l'id du user dans le header
+
+instance.interceptors.request.use((config) => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  if (user.Id) {
+    config.headers.userId = `${user.Id}`;
+  }
+  return config;
+});
+
 export default instance;
