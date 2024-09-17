@@ -47,7 +47,10 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
     if (response.success == false) {
       if (response.message == "Invalid input") {
         console.log("email not found");
-        setError({ ...error, email: "Invalid input" });
+        setError({
+          ...error,
+          email: "Il y a eu un problème lors de la connection",
+        });
         return;
       } else {
         console.log("vos informations sont incorrectes");
@@ -55,7 +58,9 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
         return;
       }
     } else {
-      console.log("Vous êtes connecté!");
+      delete response.user.Password;
+      localStorage.setItem("user", JSON.stringify(response.user));
+      localStorage.setItem("loggedIn", "true");
       return;
     }
   }
@@ -94,7 +99,9 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
           Se Connecter!
         </button>
       </form>
-      <button onClick={() => setAuth(true)}>PLOUT!</button>
+      <button onClick={() => setAuth(true)}>
+        Pas de compte? Inscrivez-vous!
+      </button>
     </div>
   );
 };

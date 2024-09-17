@@ -30,21 +30,20 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
     confpassword: "",
   });
 
+  const [message, setMessage] = useState<string>("");
+
   async function handleSubmit(user: User) {
     const { email, password, confpassword } = user;
 
     if (!email) {
-      console.log("Veuillez renseigner un email");
       setError({ ...error, email: "Veuillez renseigner un email" });
       return;
     }
     if (!password) {
-      console.log("Veuillez renseigner un mot de passe");
       setError({ ...error, password: "Veuillez renseigner un mot de passe" });
       return;
     }
     if (!confpassword) {
-      console.log("Veuillez confirmer votre mot de passe");
       setError({
         ...error,
         confpassword: "Veuillez confirmer votre mot de passe",
@@ -52,7 +51,6 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
       return;
     }
     if (password !== confpassword) {
-      console.log("Les mots de passe ne correspondent pas");
       setError({
         ...error,
         confpassword: "Les mots de passe ne correspondent pas",
@@ -63,16 +61,21 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
 
     if (response.success === false) {
       if (response?.message == "User already exists") {
-        console.log("Cet utilisateur existe déjà");
-        setError({ ...error, email: "Cet utilisateur existe déjà" });
+        setError({
+          ...error,
+          email: "Cet utilisateur existe déjà, veuillez choisir un autre email",
+        });
         return;
       } else {
-        console.log("Erreur lors de l'inscription");
+        setError({ ...error, email: "Erreur lors de l'inscription" });
         return;
       }
     } else {
-      console.log("Utilisateur créé");
-      setAuth(true);
+      setMessage("inscription réussie, redirection vers la page de connexion");
+      setTimeout(() => {
+        setMessage("");
+        setAuth(false);
+      }, 2000);
       return;
     }
   }
@@ -83,7 +86,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
         <input
           type="email"
           name=""
-          id=""
+          placeholder="votre@mail.com"
           // className="w-full"
           className={`w-full border ${
             error.email ? "border-red-500" : "border-gray-300"
@@ -97,7 +100,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
         <input
           type="password"
           name="password"
-          id=""
+          placeholder="mot de passe"
           // className="w-full"
           className={`w-full ${
             error.password ? "border-red-500" : "border-gray-300"
@@ -111,7 +114,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
         <input
           type="password"
           name="confpassword"
-          id=""
+          placeholder="confirmer mot de passe"
           // className="w-full"
           className={`w-full ${
             error.confpassword ? "border-red-500" : "border-gray-300"
@@ -132,6 +135,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
           }}
         />
       </form>
+      {message && <p>{message}</p>}
       <button onClick={() => setAuth(false)}>
         Déjà inscrit? Connectez-vous!
       </button>
