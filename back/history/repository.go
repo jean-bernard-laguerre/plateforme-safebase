@@ -6,17 +6,44 @@ import (
 )
 
 // to create an history
-func (h *HistoryModel) Create(name string, status bool, action string, created_at string, bdd_source int, bdd_target *int) (bool, error) {
-	_, err := config.DB.Exec("INSERT INTO history (name, status, action, created_at, bdd_source, bdd_target) VALUES(?, ?, ?, ?, ?, ?)", name, status, action, created_at, bdd_source, bdd_target)
+func (h *HistoryModel) Create(name string, status bool, action string, created_at string, bdd_source int, bdd_target *int) (int, error) {
+	result, err := config.DB.Exec("INSERT INTO history (name, status, action, created_at, bdd_source, bdd_target) VALUES(?, ?, ?, ?, ?, ?)", name, status, action, created_at, bdd_source, bdd_target)
 	if err != nil {
-		return false, err
+		return 0, err
 	}
-	return true, nil
+	id, _ := result.LastInsertId()
+	return int(id), nil
 }
 
 // TODO :=> TEST THIS FUNCTION
 func (h *HistoryModel) GetAll() ([]HistoryModel, error) {
 	rows, err := config.DB.Query("SELECT * FROM history")
+	if err != nil {
+		return []HistoryModel{}, err
+	}
+	defer rows.Close()
+
+	histories := []HistoryModel{}
+
+	for rows.Next() {
+		var h HistoryModel
+		err := rows.Scan(&h.Id, &h.Name, &h.Status, &h.Action, &h.Created_at, &h.Bdd_source, &h.Bdd_target)
+		if err != nil {
+			return []HistoryModel{}, err
+		}
+		histories = append(histories, h)
+	}
+
+	return histories, nil
+}
+
+func (h *HistoryModel) GetByUserId(userId int, page int, limit int) ([]HistoryModel, error) {
+	rows, err := config.DB.Query(`
+		SELECT history.id, history.name, history.status, history.action, history.created_at, history.bdd_source, history.bdd_target
+		FROM history
+		Join connection ON history.bdd_source = connection.id
+		WHERE connection.user_id = ?
+		LIMIT ? OFFSET ?`, userId, limit, page)
 	if err != nil {
 		return []HistoryModel{}, err
 	}

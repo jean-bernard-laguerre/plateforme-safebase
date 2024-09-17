@@ -12,20 +12,17 @@ func AddRoutes(app *fiber.App) {
 		conn := new(ConnectionModel)
 		if err := ctx.BodyParser(conn); err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"error":   err,
+				"error": err.Error(),
 			})
 		}
 		coValid, err := TestConnection(*conn)
 		if coValid {
 			return ctx.Status(200).JSON(fiber.Map{
-				"success": true,
 				"message": "Connection valide",
 			})
 		} else {
 			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"error":   err,
+				"error": err.Error(),
 			})
 		}
 	})
@@ -34,20 +31,18 @@ func AddRoutes(app *fiber.App) {
 		conn := new(ConnectionModel)
 		if err := ctx.BodyParser(conn); err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"error":   err,
+				"error": err.Error(),
 			})
 		}
-		success, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id)
-		if !success {
+		id, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id)
+		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"error":   err,
+				"error": err.Error(),
 			})
 		} else {
 			return ctx.Status(201).JSON(fiber.Map{
-				"success": true,
 				"message": "Connection ajoutée",
+				"id":      id,
 			})
 		}
 	})
@@ -56,20 +51,17 @@ func AddRoutes(app *fiber.App) {
 		userId, err := ctx.ParamsInt("userId")
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"error":   err,
+				"error": err.Error(),
 			})
 		}
 		conn := ConnectionModel{}
 		connections, err := conn.GetByUserId(userId)
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"error":   err,
+				"error": err.Error(),
 			})
 		}
 		return ctx.Status(200).JSON(fiber.Map{
-			"success":     true,
 			"connections": connections,
 		})
 	})
@@ -78,14 +70,12 @@ func AddRoutes(app *fiber.App) {
 		id, err := ctx.ParamsInt("id")
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"error":   err,
+				"error": err.Error(),
 			})
 		}
 		conn := ConnectionModel{}
 		connection, err := conn.GetById(id)
 		return ctx.Status(200).JSON(fiber.Map{
-			"success":    true,
 			"connection": connection,
 		})
 	})

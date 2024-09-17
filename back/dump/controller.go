@@ -66,8 +66,15 @@ func AddRoutes(app *fiber.App) {
 		if err := ctx.BodyParser(dto); err != nil {
 			return createErrorResponse(ctx, 400, "Parse error")
 		}
-		task, _ := tasks.GetById(id)
-		task.Update(id, dto.Active)
+		task, taskErr := tasks.GetById(id)
+		if taskErr != nil {
+			return createErrorResponse(ctx, 404, "Task not found")
+		}
+
+		_, updateErr := task.Update(id, dto.Active)
+		if updateErr != nil {
+			return createErrorResponse(ctx, 500, "Internal server error")
+		}
 		if dto.Active {
 			AddCronJob(task.Cron_job, task.Connection_id, id)
 			return createSuccessResponse(ctx, "Task updated successfully")
@@ -79,17 +86,30 @@ func AddRoutes(app *fiber.App) {
 
 	du.Get("/", func(ctx *fiber.Ctx) error {
 		backup := new(DumpModel)
-		if err := ctx.BodyParser(backup); err != nil {
-			return ctx.Status(200).JSON(fiber.Map{
-				"success": true,
-				"message": "All backups",
-			})
-		} else {
-			return ctx.Status(400).JSON(fiber.Map{
-				"success": false,
-				"message": "Invalid input",
-			})
+		backups, err := backup.GetAll()
+
+		if err != nil {
+			return fiber.NewError(500, "Internal server error")
 		}
+
+		return ctx.Status(200).JSON(fiber.Map{
+			"data": backups,
+		})
+	})
+
+	du.Get("/user/:id", func(ctx *fiber.Ctx) error {
+		id, err := ctx.ParamsInt("id")
+
+		backup := new(DumpModel)
+		backups, err := backup.GetByUserId(id)
+
+		if err != nil {
+			return fiber.NewError(500, "Internal server error")
+		}
+
+		return ctx.Status(200).JSON(fiber.Map{
+			"data": backups,
+		})
 	})
 
 	du.Get("/run/:id", func(ctx *fiber.Ctx) error {

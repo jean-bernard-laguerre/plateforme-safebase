@@ -9,12 +9,13 @@ import (
 
 func (c *ConnectionModel) Create(
 	name string, host string, port string, user string, password string, db_name string, db_type string, user_id int,
-) (bool, error) {
-	_, err := config.DB.Exec("INSERT INTO connection (name, host, port, user, password, db_name, db_type, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", name, host, port, user, password, db_name, db_type, user_id)
+) (int, error) {
+	result, err := config.DB.Exec("INSERT INTO connection (name, host, port, user, password, db_name, db_type, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", name, host, port, user, password, db_name, db_type, user_id)
 	if err != nil {
-		return false, err
+		return 0, err
 	}
-	return true, nil
+	id, _ := result.LastInsertId()
+	return int(id), nil
 }
 
 func (c ConnectionModel) GetById(id int) (ConnectionModel, error) {
@@ -53,7 +54,5 @@ func (c ConnectionModel) Delete(id int) (bool, error) {
 		fmt.Println(err)
 		return false, err
 	}
-
-	fmt.Println("Connection deleted")
 	return true, nil
 }
