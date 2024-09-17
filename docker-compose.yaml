@@ -1,6 +1,7 @@
 version: "2.23"
 
 services:
+
   back: 
     build:
       context: ./back
@@ -8,29 +9,32 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./volumes/safebase:/app
+      - ./back/volumes/safebase:/app
     environment:
       - NODE_ENV=development
     depends_on:
-      - mysqlDB
-      - postgresDB
-  mysqlDB:
-    image: mysql:8.0
+      - mysql
+      - postgres
+
+  mysql:
+    image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: verysecure
     ports:
       - "3309:3306"
     volumes:
-      - ./volumes/mysql:/var/lib/mysql
-  postgresDB:
-    image: postgres:12
+      - ./back/volumes/mysql:/var/lib/mysql
+
+  postgres:
+    image: postgres
     environment:
-      POSTGRES_USER: root
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: verysecure
     ports:
       - "3308:5432"
     volumes:
-      - ./volumes/postgres:/var/lib/postgresql/data
+      - ./back/volumes/postgres:/var/lib/postgresql/data
+
   client:
     build:
       context: ./client
@@ -38,7 +42,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./volumes/safebase:/app
+      - ./client/volumes/safebase:/app
     environment:
       - NODE_ENV=development
     depends_on:
