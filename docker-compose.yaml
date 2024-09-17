@@ -1,0 +1,46 @@
+version: "2.23"
+
+services:
+  back: 
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./volumes/safebase:/app
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - mysqlDB
+      - postgresDB
+  mysqlDB:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: verysecure
+    ports:
+      - "3309:3306"
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+  postgresDB:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: verysecure
+    ports:
+      - "3308:5432"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./volumes/safebase:/app
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - back
+

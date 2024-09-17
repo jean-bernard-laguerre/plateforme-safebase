@@ -1,0 +1,3 @@
+back/Dockerfile
+client/Dockerfile
+client/node_modules
