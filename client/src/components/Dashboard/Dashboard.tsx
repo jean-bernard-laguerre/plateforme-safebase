@@ -4,10 +4,10 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { TopBar } from "./TopBar";
 
-const DashboardView = () => <h1>Dashboard Component</h1>;
-const ResearchView = () => <h1>Research Component</h1>;
-const DatabaseView = () => <h1>Database Component</h1>;
-const BackupView = () => <h1>Backup Component</h1>;
+import SummaryView from "./Views/SummaryView";
+import HistoryView from "./Views/HistoryView";
+import DatabaseView from "./Views/DatabaseView";
+import BackupView from "./Views/BackupView";
 
 export const Dashboard = () => {
   const pathname = usePathname();
@@ -20,14 +20,14 @@ export const Dashboard = () => {
 
   const renderContent = () => {
     switch (currentView) {
-      case "research":
-        return <ResearchView />; // Assure-toi d'importer ou de définir ces composants
+      case "history":
+        return <HistoryView />;
       case "database":
         return <DatabaseView />;
       case "backup":
         return <BackupView />;
       default:
-        return <DashboardView />;
+        return <SummaryView />;
     }
   };
 

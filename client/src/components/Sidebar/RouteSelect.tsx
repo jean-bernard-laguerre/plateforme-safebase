@@ -39,7 +39,7 @@ export const RouteSelect = () => {
   return (
     <div className="space-y-1">
       <SidebarLink href="/" title="Dashboard" Icon={House} />
-      <SidebarLink href="/research" title="Research" Icon={History} />
+      <SidebarLink href="/history" title="History" Icon={History} />
       <SidebarLink href="/database" title="Database" Icon={DatabaseZap} />
       <SidebarLink href="/backup" title="Backup" Icon={DatabaseBackup} />
     </div>
