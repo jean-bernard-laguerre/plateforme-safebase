@@ -43,13 +43,15 @@ func TestConnectionMySql(c ConnectionModel) (bool, error) {
 }
 
 func TestConnectionPostgres(c ConnectionModel) (bool, error) {
-	connString := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", c.User, c.Password, c.Host, c.Port, c.Db_name)
+	connString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", c.User, c.Password, c.Host, c.Port, c.Db_name)
 	db, err := sql.Open(c.Db_type, connString)
+
+	err = db.Ping()
 	if err != nil {
-		fmt.Println("Invalid Connection:", c.Db_type, fmt.Sprintf("%s:%s", c.Host, c.Port), c.Db_name, err)
+		fmt.Println("Invalid Connection:", connString, err)
 		return false, err
 	}
-	fmt.Println("Valid Connection:", c.Db_type, fmt.Sprintf("%s:%s", c.Host, c.Port), c.Db_name)
+	fmt.Println("Valid Connection:", connString)
 	defer db.Close()
 	return true, nil
 }
