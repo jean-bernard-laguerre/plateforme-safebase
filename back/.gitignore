@@ -1,3 +1,4 @@
 .air.toml
-volumes/
 tmp/
+backups/mysql/*
+backups/postgres/*

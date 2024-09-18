@@ -1,11 +1,10 @@
-version: "2.23"
-
 services:
 
-  back: 
+  back:
+    container_name: Server
     build:
       context: ./back
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     volumes:
@@ -16,8 +15,21 @@ services:
       - mysql
       - postgres
 
+  mariadb:
+    image: mariadb
+    container_name: SafebaseDB
+    environment:
+      MARIADB_ROOT_PASSWORD: verysecure
+      MARIADB_USER: safebase
+      MARIADB_PASSWORD: verysecure
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./volumes/safebaseDB:/var/lib/mysql
+
   mysql:
     image: mysql
+    container_name: Mysql
     environment:
       MYSQL_ROOT_PASSWORD: verysecure
     ports:
@@ -27,6 +39,7 @@ services:
 
   postgres:
     image: postgres
+    container_name: Postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: verysecure
@@ -36,13 +49,14 @@ services:
       - ./volumes/postgres:/var/lib/postgresql/data
 
   client:
+    container_name: Client
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
-      - "8000:3000"
-    volumes:
-      - ./client:/app
+      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       - NODE_ENV=development
     depends_on:
