@@ -4,10 +4,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { TopBar } from "./TopBar";
 
-import SummaryView from "./Views/SummaryView";
-import HistoryView from "./Views/HistoryView";
-import DatabaseView from "./Views/DatabaseView";
+import { Grid } from "./Grid";
 import BackupView from "./Views/BackupView";
+import DatabaseView from "./Views/DatabaseView";
+import HistoryView from "./Views/HistoryView";
+import SummaryView from "./Views/SummaryView";
 
 export const Dashboard = () => {
   const pathname = usePathname();
@@ -34,6 +35,7 @@ export const Dashboard = () => {
   return (
     <div className="bg-white rounded-lg pb-4 shadow h-[200vh]">
       <TopBar />
+      <Grid />
       {renderContent()}
     </div>
   );

@@ -1,6 +1,7 @@
 import { AccountToggle } from "./AccountToggle";
 import { Research } from "./Research";
 import { RouteSelect } from "./RouteSelect";
+import { Terms } from "./Terms";
 
 export const Sidebar = () => {
   return (
@@ -10,9 +11,7 @@ export const Sidebar = () => {
         <Research />
         <RouteSelect />
       </div>
-      <div className="">
-        {/* TODO=> Footer Sidebar content aka authentication/déconnexion */}
-      </div>
+      <Terms />
     </div>
   );
 };
