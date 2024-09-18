@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
@@ -17,6 +18,11 @@ func main() {
 
 	// Create a new Fiber instance
 	app := fiber.New()
+	// Allow CORS
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "Origin, Content-Type, Accept, userId",
+	}))
 
 	// Add routes
 	user.AddRoutes(app)
