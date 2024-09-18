@@ -1,9 +1,9 @@
-import React from "react";
+import { Grid } from "../Grid";
 
 const SummaryView = () => {
   return (
     <div>
-      <p>Accueil View</p>
+      <Grid />
     </div>
   );
 };
