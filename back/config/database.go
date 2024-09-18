@@ -14,9 +14,9 @@ func InitDB() {
 
 	config := mysql.Config{
 		User:                 "root",
-		Passwd:               "",
+		Passwd:               "verysecure",
 		Net:                  "tcp",
-		Addr:                 "localhost:3306",
+		Addr:                 "mysql:3306",
 		DBName:               "safebase",
 		AllowNativePasswords: true,
 		ParseTime:            true,

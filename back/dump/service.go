@@ -19,11 +19,10 @@ func SaveHistory(name string, status bool, action string, created_at string, bdd
 
 func PostgresDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
-	containerName := "safebasePostgres"
-	databaseName := c.Db_name
+	/* containerName := "safebasePostgres" */
 	time := time.Now().Local().Format("2006-01-02T15-04-05")
-	fileName := databaseName + "_" + time + ".sql"
-	cmd := exec.Command("docker", "exec", containerName, "pg_dump", "-U", "postgres", "-d", databaseName)
+	fileName := c.Db_name + "_" + time + ".sql"
+	cmd := exec.Command("pg_dump", "-h", c.Host, "-p", c.Port, "-U", c.User, "-d", c.Db_name)
 	outfile, err := os.Create("./backups/postgres/" + fileName)
 	defer outfile.Close()
 	cmd.Stdout = outfile
@@ -39,14 +38,11 @@ func PostgresDump(c *connection.ConnectionModel) string {
 
 func MysqlDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
-	containerName := "safebasemysql"
-	databaseName := c.Db_name
+	/* containerName := "safebasemysql" */
 	time := time.Now().Local().Format("2006-01-02T15-04-05")
-	fileName := databaseName + "_" + time + ".sql"
+	fileName := c.Db_name + "_" + time + ".sql"
 
-	//TODO: avec DOCKER compose
-	//msqldump -h safebasemysql --port 3306 -u root --password=verysafe myDb
-	cmd := exec.Command("docker", "exec", containerName, "mysqldump", "--user", "root", "--password="+c.Password, databaseName)
+	cmd := exec.Command("mysqldump", "-h", c.Host, "--port", c.Port, "--user", c.User, "--password="+c.Password, c.Db_name)
 	outfile, err := os.Create("./backups/mysql/" + fileName)
 	defer outfile.Close()
 	cmd.Stdout = outfile
