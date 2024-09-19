@@ -49,4 +49,15 @@ export const actions = {
       return err;
     }
   },
+
+  //Delete connection
+  async deleteConnection(id: number) {
+    try {
+      const response = await instance.delete(`/connection/${id}`);
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors de la suppression de la connection:", err);
+      return err;
+    }
+  },
 };

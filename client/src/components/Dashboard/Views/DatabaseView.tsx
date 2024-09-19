@@ -11,11 +11,12 @@ interface User {
 }
 
 interface Database {
-  id: number;
-  dbName: string;
-  type: string;
-  port: number;
-  name: string;
+  Id: number;
+  Name: string;
+  Db_name: string;
+  Db_type: string;
+  Host: string;
+  Port: number;
 }
 
 // interface de databases contenant un array de Database
@@ -44,13 +45,30 @@ const DatabaseView = () => {
       return;
     } else if (response.connections.length > 0) {
       console.log("response.connections", response.connections);
-      setDatabases(response.connections);
+      setDatabases({ databases: response.connections });
+    }
+  }
+
+  async function deleteDatabase(id: number) {
+    const response = await actions.deleteConnection(id);
+    console.log("response", response);
+    if (response.success === true) {
+      console.log("connection supprimée avec succès", response.message);
+      //TODO: TOAST success
+      getUserDatabase();
+    } else {
+      //TODO: TOAST error
+      console.log("erreur lors de la suppression de la connection:", response);
     }
   }
 
   useEffect(() => {
     getUserDatabase();
-  }, []);
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    console.log("databases", databases);
+  }, [databases]);
 
   return (
     <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
@@ -80,12 +98,14 @@ const DatabaseView = () => {
           <tbody>
             {databases.databases.map((database, index) => (
               <TableRow
-                key={database.id}
-                dbName={database.dbName}
-                type={database.type}
-                port={database.port}
-                name={database.name}
+                key={database.Id}
+                id={database.Id}
+                dbName={database.Db_name}
+                type={database.Db_type}
+                port={database.Port}
+                name={database.Name}
                 order={index + 1}
+                deleteDatabase={deleteDatabase}
               ></TableRow>
             ))}
           </tbody>
@@ -118,17 +138,21 @@ const TableHead = () => {
 };
 
 const TableRow = ({
+  id,
   dbName,
   type,
   port,
   name,
   order,
+  deleteDatabase,
 }: {
+  id: number;
   dbName: string;
   type: string;
   port: number;
   name: string;
   order: number;
+  deleteDatabase: (id: number) => void;
 }) => {
   return (
     <tr className={order % 2 ? "bg-stone-100 text-sm" : "text-sm "}>
@@ -154,7 +178,13 @@ const TableRow = ({
           placement="left"
           className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
-          <button className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8">
+          <button
+            className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8"
+            onClick={() => {
+              console.log("delete", dbName);
+              deleteDatabase(id);
+            }}
+          >
             <Trash2 size={16} />
           </button>
         </Tooltip>

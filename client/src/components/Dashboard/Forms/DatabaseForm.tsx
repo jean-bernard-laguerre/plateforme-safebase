@@ -31,17 +31,22 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     }
   }
 
+  async function addConnection() {
+    const response = await actions.addConnect(connection);
+    console.log("response", response);
+    if (response.success === true) {
+      handleCloseModal();
+    } else {
+      console.log("erreur lors de l'ajout de la connection", response);
+    }
+  }
+
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Add New Database</h2>
       <form>
         <div className="mb-4">
           <label className="block text-sm font-medium">DB Name</label>
-          {/* <input
-            type="text"
-            className="w-full p-2 border rounded"
-            placeholder="Enter DB Name"
-          /> */}
           <input
             type="text"
             className="w-full p-2 border rounded"
@@ -54,11 +59,6 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium">Type</label>
-          {/* <input
-            type="text"
-            className="w-full p-2 border rounded"
-            placeholder="Enter DB Type"
-          /> */}
           <select
             className="w-full p-2 border rounded"
             onChange={(e) => {
@@ -135,16 +135,22 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
         </div>
 
         <div className="flex justify-between">
-          <button
-            type="button"
-            className="text-sm font-semibold bg-violet-400 text-stone-50 p-2 rounded"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log("test connection");
-            }}
-          >
-            Test Connection
-          </button>
+          <div>
+            <button
+              type="button"
+              className="text-sm font-semibold bg-violet-400 text-stone-50 p-2 rounded"
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("test connection");
+                test();
+              }}
+            >
+              Test Connection
+            </button>
+            {/* une icone validé si la connection est bonne */}
+            {testConnection && <span className="text-green-500 ml-2">✔️</span>}
+          </div>
+
           <div>
             <button
               type="button"
@@ -154,14 +160,17 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
               Cancel
             </button>
             <button
-              type="submit"
               disabled={!testConnection}
-              // className="ml-2 text-sm font-semibold bg-green-500 text-white p-2 rounded"
               className={`ml-2 text-sm font-semibold text-white p-2 rounded ${
-                testConnection
+                !testConnection
                   ? "cursor-not-allowed bg-gray-300"
                   : "bg-green-500"
               }`}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("add connection");
+                addConnection();
+              }}
             >
               Save
             </button>
