@@ -22,12 +22,19 @@ const DatabaseView = () => {
           <DatabaseZap />
           Database Connection
         </h3>
-        <button
-          onClick={handleOpenModal}
-          className="text-sm font-semibold bg-violet-400 text-stone-50 p-1 rounded border  border-violet-500"
+        <Tooltip
+          content="Add a new database"
+          placement="left"
+          showArrow
+          className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
-          Add +
-        </button>
+          <button
+            onClick={handleOpenModal}
+            className="text-sm font-semibold bg-violet-400 text-stone-50 p-1 rounded border  border-violet-500"
+          >
+            Add +
+          </button>
+        </Tooltip>
       </div>
       <table className="w-full table-auto">
         <TableHead></TableHead>
@@ -97,18 +104,24 @@ const TableRow = ({
       <td className="p-1.5">{port}</td>
       <td className="p-1.5">{name}</td>
       <td className="p-1.5 flex gap-2">
-        <Tooltip showArrow={true} content="Sauvegarder">
-          <button className="text-sm font font-semibold bg-[#8BFAA7] text-stone-50 p-1 rounded">
+        <Tooltip
+          showArrow
+          content="Sauvegarder"
+          placement="left"
+          className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
+        >
+          <button className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8">
             <ArrowDownToLine size={16} />
           </button>
         </Tooltip>
 
         <Tooltip
-          showArrow={true}
+          showArrow
           content="Supprimer"
-          className="border border-slate-500"
+          placement="left"
+          className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
-          <button className="text-sm font-semibold bg-[#FA8BA7] text-white p-1 rounded">
+          <button className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8">
             <Trash2 size={16} />
           </button>
         </Tooltip>
