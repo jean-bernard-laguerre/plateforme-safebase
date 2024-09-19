@@ -1,11 +1,30 @@
 import { Tooltip } from "@nextui-org/tooltip";
 import { ArrowDownToLine, DatabaseZap, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatabaseForm } from "../Forms/DatabaseForm";
 import Modal from "../Modal";
 
+interface User {
+  id: number;
+  email: string;
+}
+
+interface Dababase {
+  id: number;
+  dbName: string;
+  type: string;
+  port: number;
+  name: string;
+}
+
+interface Databases {
+  databases: Dababase[];
+}
+
 const DatabaseView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [databases, setDatabases] = useState<Databases | null>(null);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -14,6 +33,15 @@ const DatabaseView = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const getUserDatabase = () => {};
+
+  useEffect(() => {
+    const storeUser = localStorage.getItem("user");
+    if (storeUser) {
+      setUser(JSON.parse(localStorage.getItem("user")!));
+    }
+  }, []);
 
   return (
     <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
@@ -32,7 +60,10 @@ const DatabaseView = () => {
       <table className="w-full table-auto">
         <TableHead></TableHead>
         <tbody>
-          <TableRow
+          {
+            // si databases est nul on affiche un message
+          }
+          {/* <TableRow
             dbName="db1"
             type="Postgres"
             port={5432}
@@ -52,7 +83,7 @@ const DatabaseView = () => {
             port={5432}
             name="db1"
             order={3}
-          ></TableRow>
+          ></TableRow> */}
         </tbody>
       </table>
 
