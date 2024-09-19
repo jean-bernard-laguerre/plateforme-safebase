@@ -1,9 +1,7 @@
-"use client";
 import { useState } from "react";
-import SignIn from "./SignIn";
-import Signup from "./Signup";
-
-function Auhtentication() {
+import SignIn from "../../Authentication/SignIn";
+import Signup from "../../Authentication/Signup";
+const AuthView = () => {
   const [toggleAuth, setToggleAuth] = useState<boolean>(false);
   return (
     <div>
@@ -14,6 +12,6 @@ function Auhtentication() {
       )}
     </div>
   );
-}
+};
 
-export default Auhtentication;
+export default AuthView;
