@@ -79,4 +79,23 @@ func AddRoutes(app *fiber.App) {
 			"connection": connection,
 		})
 	})
+
+	co.Delete("/:id", func(ctx *fiber.Ctx) error {
+		id, err := ctx.ParamsInt("id")
+		if err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		conn := ConnectionModel{}
+		success, err := conn.Delete(id)
+		if err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		return ctx.Status(200).JSON(fiber.Map{
+			"success": success,
+		})
+	})
 }
