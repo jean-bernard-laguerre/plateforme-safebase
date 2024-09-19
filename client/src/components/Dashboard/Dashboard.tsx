@@ -7,6 +7,7 @@ import { TopBar } from "./TopBar";
 import AuthView from "./Views/AuthView";
 import BackupView from "./Views/BackupView";
 import DatabaseView from "./Views/DatabaseView";
+import HistoryView from "./Views/HistoryView";
 import SummaryView from "./Views/SummaryView";
 
 export const Dashboard = () => {
@@ -19,6 +20,11 @@ export const Dashboard = () => {
     if (userStorage) {
       setIsAuthenticated(true);
     }
+  }, []);
+
+  useEffect(() => {
+    console.log("AUTHHH", isAuthenticated);
+
     if (!isAuthenticated) {
       setCurrentView("authentication");
     } else if (pathname) {
@@ -26,14 +32,14 @@ export const Dashboard = () => {
       const view = pathname.split("/")[1] || "dashboard";
       setCurrentView(view);
     }
-  }, [pathname]);
+  }, [pathname, isAuthenticated]);
 
   const renderContent = () => {
     switch (currentView) {
       case "authentication":
         return <AuthView />;
       case "history":
-        return <AuthView />;
+        return <HistoryView />;
       case "database":
         return <DatabaseView />;
       case "backup":
