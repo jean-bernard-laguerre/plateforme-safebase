@@ -3,11 +3,13 @@ package history
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/middleware"
 )
 
 func AddRoutes(app *fiber.App) {
 
 	hy := app.Group("/history")
+	hy.Use(middleware.AuthMiddleware())
 
 	hy.Get("/all", func(ctx *fiber.Ctx) error {
 		history := HistoryModel{}
@@ -22,8 +24,8 @@ func AddRoutes(app *fiber.App) {
 		})
 	})
 
-	hy.Get("/user/:id", func(ctx *fiber.Ctx) error {
-		id, err := ctx.ParamsInt("id")
+	hy.Get("/", func(ctx *fiber.Ctx) error {
+		id := ctx.Locals("userId").(int)
 
 		// get the page and limit from the query or set a default
 		var params config.ParamsHandler
@@ -34,11 +36,7 @@ func AddRoutes(app *fiber.App) {
 				"error": err.Error(),
 			})
 		}
-		if err != nil {
-			return ctx.Status(400).JSON(fiber.Map{
-				"error": err.Error(),
-			})
-		}
+
 		history := HistoryModel{}
 		histories, err := history.GetByUserId(id, params.Page, params.Limit)
 		if err != nil {

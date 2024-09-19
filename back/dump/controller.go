@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/middleware"
 )
 
 type updateDTO struct {
@@ -27,6 +28,7 @@ func createSuccessResponse(ctx *fiber.Ctx, message string) error {
 func AddRoutes(app *fiber.App) {
 
 	du := app.Group("/dump")
+	du.Use(middleware.AuthMiddleware())
 
 	du.Post("/task", func(ctx *fiber.Ctx) error {
 		tasks := new(DumpModel)
@@ -39,12 +41,11 @@ func AddRoutes(app *fiber.App) {
 
 		id, err := tasks.Create(tasks.Name, tasks.Cron_job, tasks.Connection_id)
 		if err != nil {
-			return createErrorResponse(ctx, 500, "Internal server error")
+			return createErrorResponse(ctx, 500, err.Error())
 		} else {
 			AddCronJob(tasks.Cron_job, tasks.Connection_id, id)
 			return createSuccessResponse(ctx, "Task created successfully")
 		}
-
 	})
 
 	// du.Get("/task/:id", func(ctx *fiber.Ctx) error {
@@ -84,7 +85,7 @@ func AddRoutes(app *fiber.App) {
 		}
 	})
 
-	du.Get("/", func(ctx *fiber.Ctx) error {
+	/* du.Get("/", func(ctx *fiber.Ctx) error {
 		backup := new(DumpModel)
 		backups, err := backup.GetAll()
 
@@ -95,10 +96,10 @@ func AddRoutes(app *fiber.App) {
 		return ctx.Status(200).JSON(fiber.Map{
 			"data": backups,
 		})
-	})
+	}) */
 
-	du.Get("/user/:id", func(ctx *fiber.Ctx) error {
-		id, err := ctx.ParamsInt("id")
+	du.Get("/", func(ctx *fiber.Ctx) error {
+		id := ctx.Locals("userId").(int)
 
 		backup := new(DumpModel)
 		backups, err := backup.GetByUserId(id)
