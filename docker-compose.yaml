@@ -1,5 +1,4 @@
 services:
-
   back:
     container_name: Server
     build:
@@ -62,4 +61,5 @@ services:
       - NODE_ENV=development
     depends_on:
       - back
-
+    volumes:
+      - ./client:/app

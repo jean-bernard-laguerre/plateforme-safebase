@@ -43,7 +43,7 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
 
     const response = await actions.login(user);
 
-    console.log(response);
+    console.log("PLOUT====>", response);
     if (response.success == false) {
       if (response.message == "Invalid input") {
         console.log("email not found");
@@ -65,7 +65,7 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
     }
   }
   return (
-    <div className=" absolute top-1/3 left-1/3 ">
+    <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
       <form action="post" className="bg-violet-400">
         <input
           type="text"
