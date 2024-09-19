@@ -3,13 +3,14 @@ import { ArrowDownToLine, DatabaseZap, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DatabaseForm } from "../Forms/DatabaseForm";
 import Modal from "../Modal";
+import { actions } from "@/services/connectionService";
 
 interface User {
   id: number;
   email: string;
 }
 
-interface Dababase {
+interface Database {
   id: number;
   dbName: string;
   type: string;
@@ -17,13 +18,13 @@ interface Dababase {
   name: string;
 }
 
+// interface de databases contenant un array de Database
 interface Databases {
-  databases: Dababase[];
+  databases: Database[];
 }
 
 const DatabaseView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
   const [databases, setDatabases] = useState<Databases | null>(null);
 
   const handleOpenModal = () => {
@@ -34,13 +35,21 @@ const DatabaseView = () => {
     setIsModalOpen(false);
   };
 
-  const getUserDatabase = () => {};
+  async function getUserDatabase() {
+    // get user databases
+    const response = await actions.getUserConnections();
+    console.log("response", response);
+    if (response.success === false) {
+      console.log("erreur lors de la récupération des connections:", response);
+      return;
+    } else if (response.connections.length > 0) {
+      console.log("response.connections", response.connections);
+      setDatabases(response.connections);
+    }
+  }
 
   useEffect(() => {
-    const storeUser = localStorage.getItem("user");
-    if (storeUser) {
-      setUser(JSON.parse(localStorage.getItem("user")!));
-    }
+    getUserDatabase();
   }, []);
 
   return (
@@ -64,35 +73,28 @@ const DatabaseView = () => {
           </button>
         </Tooltip>
       </div>
-      <table className="w-full table-auto">
-        <TableHead></TableHead>
-        <tbody>
-          {
-            // si databases est nul on affiche un message
-          }
-          {/* <TableRow
-            dbName="db1"
-            type="Postgres"
-            port={5432}
-            name="db1"
-            order={1}
-          ></TableRow>
-          <TableRow
-            dbName="db1"
-            type="Postgres"
-            port={5432}
-            name="db1"
-            order={2}
-          ></TableRow>
-          <TableRow
-            dbName="db1"
-            type="Postgres"
-            port={5432}
-            name="db1"
-            order={3}
-          ></TableRow> */}
-        </tbody>
-      </table>
+
+      {databases ? (
+        <table className="w-full table-auto">
+          <TableHead></TableHead>
+          <tbody>
+            {databases.databases.map((database, index) => (
+              <TableRow
+                key={database.id}
+                dbName={database.dbName}
+                type={database.type}
+                port={database.port}
+                name={database.name}
+                order={index + 1}
+              ></TableRow>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className="text-center text-sm">
+          <span>Vous n'avez pas encore de base de données</span>
+        </div>
+      )}
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <DatabaseForm handleCloseModal={handleCloseModal} />
