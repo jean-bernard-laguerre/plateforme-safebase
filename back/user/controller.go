@@ -49,7 +49,7 @@ func AddRoutes(app *fiber.App) {
 				"message": err.Error(),
 			})
 		}
-
+		//hello
 		return c.Status(200).JSON(fiber.Map{
 			"user": u,
 		})
