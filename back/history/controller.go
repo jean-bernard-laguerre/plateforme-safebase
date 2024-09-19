@@ -47,7 +47,7 @@ func AddRoutes(app *fiber.App) {
 			})
 		}
 		return ctx.Status(200).JSON(fiber.Map{
-			"histories": histories,
+			"history": histories,
 		})
 	})
 }
