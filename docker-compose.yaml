@@ -12,8 +12,9 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - mysql
+      - mariadb
       - postgres
+      - mysql
 
   mariadb:
     image: mariadb
