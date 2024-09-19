@@ -40,8 +40,14 @@ func CloseDB() {
 
 func SetupDatabase() error {
 
+	_, err := DB.Exec("USE safebase")
+	if err == nil {
+		fmt.Println("Using database safebase")
+		return nil
+	}
+
 	// Create the database
-	_, err := DB.Exec("CREATE DATABASE IF NOT EXISTS safebase")
+	_, err = DB.Exec("CREATE DATABASE IF NOT EXISTS safebase")
 	if err != nil {
 		return err
 	} else {
