@@ -2,11 +2,13 @@ package connection
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/middleware"
 )
 
 func AddRoutes(app *fiber.App) {
 
 	co := app.Group("/connection")
+	co.Use(middleware.AuthMiddleware())
 
 	co.Post("/test", func(ctx *fiber.Ctx) error {
 		conn := new(ConnectionModel)
@@ -28,13 +30,14 @@ func AddRoutes(app *fiber.App) {
 	})
 
 	co.Post("/", func(ctx *fiber.Ctx) error {
+		userId := ctx.Locals("userId").(int)
 		conn := new(ConnectionModel)
 		if err := ctx.BodyParser(conn); err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
-		id, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, conn.User_id)
+		id, err := conn.Create(conn.Name, conn.Host, conn.Port, conn.User, conn.Password, conn.Db_name, conn.Db_type, userId)
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"error": err.Error(),
@@ -47,13 +50,8 @@ func AddRoutes(app *fiber.App) {
 		}
 	})
 
-	co.Get("/user/:userId", func(ctx *fiber.Ctx) error {
-		userId, err := ctx.ParamsInt("userId")
-		if err != nil {
-			return ctx.Status(400).JSON(fiber.Map{
-				"error": err.Error(),
-			})
-		}
+	co.Get("/", func(ctx *fiber.Ctx) error {
+		userId := ctx.Locals("userId").(int)
 		conn := ConnectionModel{}
 		connections, err := conn.GetByUserId(userId)
 		if err != nil {

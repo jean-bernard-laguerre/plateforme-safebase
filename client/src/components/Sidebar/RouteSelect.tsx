@@ -5,6 +5,7 @@ import {
   History,
   House,
   LucideIcon,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,6 +22,7 @@ const SidebarLink = ({ href, title, Icon }: SidebarLinkProps) => {
     pathname === href || (pathname === "/" && href === "/dashboard");
   return (
     <Link
+      aria-disabled="true"
       href={href}
       className={`flex items-center justify-start gap-2 w-full rounded px-2 py-1.5 text-sm transition-[box-shadow,_background-color,_color] ${
         isActive
@@ -42,6 +44,7 @@ export const RouteSelect = () => {
       <SidebarLink href="/database" title="Database" Icon={DatabaseZap} />
       <SidebarLink href="/backup" title="Backup" Icon={DatabaseBackup} />
       <SidebarLink href="/history" title="History" Icon={History} />
+      <SidebarLink href="/authentication" title="Authentication" Icon={User} />
     </div>
   );
 };
