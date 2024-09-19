@@ -81,7 +81,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth }) => {
   }
 
   return (
-    <div>
+    <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
       <form action="" method="post" className="bg-violet-400">
         <input
           type="email"
