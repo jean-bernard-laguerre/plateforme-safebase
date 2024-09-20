@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { DatabaseForm } from "../Forms/DatabaseForm";
 import Modal from "../Modal";
 import { actions } from "@/services/connectionService";
+import { actions as dump } from "@/services/dumpService";
 
 interface User {
   id: number;
@@ -46,6 +47,18 @@ const DatabaseView = () => {
     } else if (response.connections.length > 0) {
       console.log("response.connections", response.connections);
       setDatabases({ databases: response.connections });
+    }
+  }
+
+  async function dumpDatabase(id: number) {
+    const response = await dump.dump(id);
+    console.log("response", response);
+    if (response.success === true) {
+      console.log("dump effectué avec succès", response.message);
+      //TODO: TOAST success
+    } else {
+      console.log("erreur lors du dump de la base:", response);
+      //TODO: TOAST error
     }
   }
 
@@ -105,6 +118,7 @@ const DatabaseView = () => {
                 port={database.Port}
                 name={database.Name}
                 order={index + 1}
+                dumpDatabase={dumpDatabase}
                 deleteDatabase={deleteDatabase}
               ></TableRow>
             ))}
@@ -144,6 +158,7 @@ const TableRow = ({
   port,
   name,
   order,
+  dumpDatabase,
   deleteDatabase,
 }: {
   id: number;
@@ -152,6 +167,7 @@ const TableRow = ({
   port: number;
   name: string;
   order: number;
+  dumpDatabase: (id: number) => void;
   deleteDatabase: (id: number) => void;
 }) => {
   return (
@@ -167,7 +183,12 @@ const TableRow = ({
           placement="left"
           className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
-          <button className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8">
+          <button
+            className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8"
+            onClick={() => {
+              dumpDatabase(id);
+            }}
+          >
             <ArrowDownToLine size={16} />
           </button>
         </Tooltip>
@@ -181,7 +202,6 @@ const TableRow = ({
           <button
             className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8"
             onClick={() => {
-              console.log("delete", dbName);
               deleteDatabase(id);
             }}
           >
