@@ -15,6 +15,15 @@ func (h *HistoryModel) Create(name string, status bool, action string, created_a
 	return int(id), nil
 }
 
+// to get an history by id
+func (h *HistoryModel) GetById(id int) (HistoryModel, error) {
+	err := config.DB.QueryRow("SELECT * FROM history WHERE id = ?", id).Scan(&h.Id, &h.Name, &h.Status, &h.Action, &h.Created_at, &h.Bdd_source, &h.Bdd_target)
+	if err != nil {
+		return HistoryModel{}, err
+	}
+	return *h, nil
+}
+
 // TODO :=> TEST THIS FUNCTION
 func (h *HistoryModel) GetAll() ([]HistoryModel, error) {
 	rows, err := config.DB.Query("SELECT * FROM history")
