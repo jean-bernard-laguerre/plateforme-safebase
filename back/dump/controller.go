@@ -19,12 +19,14 @@ type restoreDTO struct {
 
 func createErrorResponse(ctx *fiber.Ctx, statusCode int, message string) error {
 	return ctx.Status(statusCode).JSON(fiber.Map{
+		"success": false,
 		"message": message,
 	})
 }
 
 func createSuccessResponse(ctx *fiber.Ctx, message string) error {
 	return ctx.Status(200).JSON(fiber.Map{
+		"success": true,
 		"message": message,
 	})
 }
