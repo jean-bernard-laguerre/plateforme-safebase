@@ -8,7 +8,6 @@ interface Connection {
   Password: string;
   Db_name: string;
   Db_type: string;
-  User_id: number;
 }
 
 export const actions = {
@@ -41,12 +40,23 @@ export const actions = {
   },
 
   //Get user connections ()
-  async getUserConnections(userId: number) {
+  async getUserConnections() {
     try {
-      const response = await instance.get(`/connection/user/${userId}`);
+      const response = await instance.get("/connection");
       return response.data;
     } catch (err) {
       console.log("erreur lors de la récupération des connections:", err);
+      return err;
+    }
+  },
+
+  //Delete connection
+  async deleteConnection(id: number) {
+    try {
+      const response = await instance.delete(`/connection/${id}`);
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors de la suppression de la connection:", err);
       return err;
     }
   },
