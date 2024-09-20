@@ -115,6 +115,7 @@ const DatabaseView = () => {
                 id={database.Id}
                 dbName={database.Db_name}
                 type={database.Db_type}
+                host={database.Host}
                 port={database.Port}
                 name={database.Name}
                 order={index + 1}
@@ -143,6 +144,7 @@ const TableHead = () => {
       <tr className="text-sm font-normal text-stone-500">
         <th className="text-start p-1.5">DBName</th>
         <th className="text-start p-1.5">Type</th>
+        <th className="text-start p-1.5">Host</th>
         <th className="text-start p-1.5">Port</th>
         <th className="text-start p-1.5">Name</th>
         <th className="w-1"></th>
@@ -155,6 +157,7 @@ const TableRow = ({
   id,
   dbName,
   type,
+  host,
   port,
   name,
   order,
@@ -164,6 +167,7 @@ const TableRow = ({
   id: number;
   dbName: string;
   type: string;
+  host: string;
   port: number;
   name: string;
   order: number;
@@ -174,6 +178,7 @@ const TableRow = ({
     <tr className={order % 2 ? "bg-stone-100 text-sm" : "text-sm "}>
       <td className="p-1.5">{dbName}</td>
       <td className="p-1.5">{type}</td>
+      <td className="p-1.5">{host}</td>
       <td className="p-1.5">{port}</td>
       <td className="p-1.5">{name}</td>
       <td className="p-1.5 flex gap-2">
