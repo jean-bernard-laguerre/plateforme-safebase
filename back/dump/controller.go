@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/jean-bernard-laguerre/plateforme-safebase/connection"
+	"github.com/jean-bernard-laguerre/plateforme-safebase/history"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/middleware"
 )
 
@@ -11,16 +12,19 @@ type updateDTO struct {
 	Active bool `json:"active"`
 }
 
+type restoreDTO struct {
+	HistoryId    int
+	ConnectionId int
+}
+
 func createErrorResponse(ctx *fiber.Ctx, statusCode int, message string) error {
 	return ctx.Status(statusCode).JSON(fiber.Map{
-		"success": false,
 		"message": message,
 	})
 }
 
 func createSuccessResponse(ctx *fiber.Ctx, message string) error {
 	return ctx.Status(200).JSON(fiber.Map{
-		"success": true,
 		"message": message,
 	})
 }
@@ -28,7 +32,9 @@ func createSuccessResponse(ctx *fiber.Ctx, message string) error {
 func AddRoutes(app *fiber.App) {
 
 	du := app.Group("/dump")
+	re := app.Group("/restore")
 	du.Use(middleware.AuthMiddleware())
+	re.Use(middleware.AuthMiddleware())
 
 	du.Post("/task", func(ctx *fiber.Ctx) error {
 		tasks := new(DumpModel)
@@ -154,6 +160,51 @@ func AddRoutes(app *fiber.App) {
 				"message": "Backup deleted successfully" + string(id),
 			})
 		}
+	})
+
+	re.Post("/", func(ctx *fiber.Ctx) error {
+		restore := new(restoreDTO)
+		if err := ctx.BodyParser(restore); err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		history := history.HistoryModel{}
+		h, err := history.GetById(restore.HistoryId)
+		if err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		if h.Action != "Backup" {
+			createErrorResponse(ctx, 400, "This history is not a backup")
+		}
+
+		if h.Status == false {
+			createErrorResponse(ctx, 400, "This backup is not valid")
+		}
+
+		connection := connection.ConnectionModel{}
+		dbConn, err := connection.GetById(restore.ConnectionId)
+		if err != nil {
+			createErrorResponse(ctx, 400, err.Error())
+		}
+
+		var result string
+		if dbConn.Db_type == "postgres" {
+			result = PostgresRestore(&dbConn, h.Name)
+		}
+		if dbConn.Db_type == "mysql" {
+			result = MysqlRestore(&dbConn, h.Name)
+		}
+
+		if result != "Restore created successfully" {
+			createErrorResponse(ctx, 500, result)
+		}
+
+		return createSuccessResponse(ctx, "Restore created successfully")
 	})
 
 }

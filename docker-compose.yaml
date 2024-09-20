@@ -11,21 +11,8 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - mariadb
       - postgres
       - mysql
-
-  mariadb:
-    image: mariadb
-    container_name: SafebaseDB
-    environment:
-      MARIADB_ROOT_PASSWORD: verysecure
-      MARIADB_USER: safebase
-      MARIADB_PASSWORD: verysecure
-    ports:
-      - "3307:3306"
-    volumes:
-      - ./volumes/safebaseDB:/var/lib/mysql
 
   mysql:
     image: mysql
@@ -38,7 +25,7 @@ services:
       - ./volumes/mysql:/var/lib/mysql
 
   postgres:
-    image: postgres
+    image: postgres:16.4
     container_name: Postgres
     environment:
       POSTGRES_USER: postgres

@@ -1,6 +1,7 @@
 package dump
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -19,17 +20,23 @@ func SaveHistory(name string, status bool, action string, created_at string, bdd
 
 func PostgresDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
-	/* containerName := "safebasePostgres" */
 	time := time.Now().Local().Format("2006-01-02T15-04-05")
 	fileName := c.Db_name + "_" + time + ".sql"
-	cmd := exec.Command("pg_dump", "-h", c.Host, "-p", c.Port, "-U", c.User, "-d", c.Db_name)
+
+	cmd := exec.Command("pg_dump", "-h", c.Host, "-p", c.Port, "-U", c.User, c.Db_name)
+	cmd.Env = append(os.Environ(), "PGPASSWORD="+c.Password)
+
 	outfile, err := os.Create("./backups/postgres/" + fileName)
 	defer outfile.Close()
+
+	var stderr bytes.Buffer
 	cmd.Stdout = outfile
+	cmd.Stderr = &stderr
+
 	err = cmd.Run()
 	if err != nil {
 		SaveHistory(fileName, false, "Backup", time, c.Id, nil)
-		return fmt.Sprintf("Error:", err)
+		return fmt.Sprintf("Error: %v: %e", err.Error(), stderr.String())
 	} else {
 		SaveHistory(fileName, true, "Backup", time, c.Id, nil)
 		return fmt.Sprintf("Backup created successfully")
@@ -38,20 +45,56 @@ func PostgresDump(c *connection.ConnectionModel) string {
 
 func MysqlDump(c *connection.ConnectionModel) string {
 	fmt.Println("Ok cron job")
-	/* containerName := "safebasemysql" */
 	time := time.Now().Local().Format("2006-01-02T15-04-05")
 	fileName := c.Db_name + "_" + time + ".sql"
 
 	cmd := exec.Command("mysqldump", "-h", c.Host, "--port", c.Port, "--user", c.User, "--password="+c.Password, c.Db_name)
 	outfile, err := os.Create("./backups/mysql/" + fileName)
 	defer outfile.Close()
+
+	var stderr bytes.Buffer
 	cmd.Stdout = outfile
+	cmd.Stderr = &stderr
+
 	err = cmd.Run()
 	if err != nil {
 		SaveHistory(fileName, false, "Backup", time, c.Id, nil)
-		return fmt.Sprintf("Error:", err)
+		return fmt.Sprintf("Error: %v: %e", err.Error(), stderr.String())
 	} else {
 		SaveHistory(fileName, true, "Backup", time, c.Id, nil)
 		return fmt.Sprintf("Backup created successfully")
+	}
+}
+
+func MysqlRestore(c *connection.ConnectionModel, fileName string) string {
+	fmt.Println("Ok cron job")
+	cmd := exec.Command("mysql", "-h", c.Host, "--port", c.Port, "-u", c.User, "--password="+c.Password, c.Db_name)
+	infile, err := os.Open("./backups/mysql/" + fileName)
+	defer infile.Close()
+	cmd.Stdin = infile
+	err = cmd.Run()
+	if err != nil {
+		SaveHistory(fileName, false, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		return fmt.Sprintf("Error:", err)
+	} else {
+		SaveHistory(fileName, true, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		return fmt.Sprintf("Restore created successfully")
+	}
+}
+
+func PostgresRestore(c *connection.ConnectionModel, fileName string) string {
+	fmt.Println("Ok cron job")
+	cmd := exec.Command("pg_restore", "-h", c.Host, "-p", c.Port, "-u", c.User, c.Db_name)
+	cmd.Env = append(os.Environ(), "PGPASSWORD="+c.Password)
+	infile, err := os.Open("./backups/postgres/" + fileName)
+	defer infile.Close()
+	cmd.Stdin = infile
+	err = cmd.Run()
+	if err != nil {
+		SaveHistory(fileName, false, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		return fmt.Sprintf("Error:", err)
+	} else {
+		SaveHistory(fileName, true, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		return fmt.Sprintf("Restore created successfully")
 	}
 }
