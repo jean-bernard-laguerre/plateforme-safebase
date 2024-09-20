@@ -55,11 +55,11 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "8080:8080"
+    volumes:
+      - ./client:/app
     expose:
       - "8080"
     environment:
       - NODE_ENV=development
     depends_on:
       - back
-    volumes:
-      - ./client:/app

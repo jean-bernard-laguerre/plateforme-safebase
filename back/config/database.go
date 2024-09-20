@@ -96,7 +96,7 @@ func SetupDatabase() error {
 		cron_job VARCHAR(255) NOT NULL,
 		connection_id INT NOT NULL,
 		created_at DATETIME NOT NULL,
-		active BOOLEAN NOT NULL,
+		active BOOLEAN NOT NULL DEFAULT 1,
 		FOREIGN KEY (connection_id) REFERENCES connection(id)
 	)`)
 	if err != nil {
