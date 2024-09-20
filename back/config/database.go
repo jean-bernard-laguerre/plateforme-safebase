@@ -81,7 +81,7 @@ func SetupDatabase() error {
 		db_name VARCHAR(255) NOT NULL,
 		db_type VARCHAR(255) NOT NULL,
 		user_id INT NOT NULL,
-		FOREIGN KEY (user_id) REFERENCES user(id)
+		FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 	)`)
 	if err != nil {
 		fmt.Println("Connection table: ", err)
@@ -97,7 +97,8 @@ func SetupDatabase() error {
 		connection_id INT NOT NULL,
 		created_at DATETIME NOT NULL,
 		active BOOLEAN NOT NULL DEFAULT 1,
-		FOREIGN KEY (connection_id) REFERENCES connection(id)
+		FOREIGN KEY (connection_id) REFERENCES connection(id) ON DELETE CASCADE
+		
 	)`)
 	if err != nil {
 		fmt.Println("Backup table: ", err)
@@ -114,8 +115,8 @@ func SetupDatabase() error {
 		created_at DATETIME NOT NULL,
 		bdd_source INT NOT NULL,
 		bdd_target INT,
-		FOREIGN KEY (bdd_source) REFERENCES connection(id),
-		FOREIGN KEY (bdd_target) REFERENCES connection(id)
+		FOREIGN KEY (bdd_source) REFERENCES connection(id) ON DELETE CASCADE,
+		FOREIGN KEY (bdd_target) REFERENCES connection(id) ON DELETE CASCADE
 	)`)
 	if err != nil {
 		fmt.Println("History table: ", err)

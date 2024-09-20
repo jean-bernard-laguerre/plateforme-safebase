@@ -27,7 +27,7 @@ func AddRoutes(app *fiber.App) {
 	hy.Get("/", func(ctx *fiber.Ctx) error {
 		id := ctx.Locals("userId").(int)
 
-		// get the page and limit from the query or set a default
+		// get the page, limit & filter from the query or set a default
 		var params config.ParamsHandler
 		params.Init()
 
@@ -38,7 +38,7 @@ func AddRoutes(app *fiber.App) {
 		}
 
 		history := HistoryModel{}
-		histories, err := history.GetByUserId(id, params.Page, params.Limit)
+		histories, err := history.GetByUserId(id, params.Page, params.Limit, params.Filter)
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"error": err.Error(),

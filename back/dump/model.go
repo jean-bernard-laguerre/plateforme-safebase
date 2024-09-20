@@ -11,4 +11,5 @@ type DumpModel struct {
 	Connection_id int
 	Created_at    time.Time
 	Active        bool
+	Db_name       string
 }

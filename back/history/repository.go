@@ -15,6 +15,15 @@ func (h *HistoryModel) Create(name string, status bool, action string, created_a
 	return int(id), nil
 }
 
+// to get an history by id
+func (h *HistoryModel) GetById(id int) (HistoryModel, error) {
+	err := config.DB.QueryRow("SELECT * FROM history WHERE id = ?", id).Scan(&h.Id, &h.Name, &h.Status, &h.Action, &h.Created_at, &h.Bdd_source, &h.Bdd_target)
+	if err != nil {
+		return HistoryModel{}, err
+	}
+	return *h, nil
+}
+
 // TODO :=> TEST THIS FUNCTION
 func (h *HistoryModel) GetAll() ([]HistoryModel, error) {
 	rows, err := config.DB.Query("SELECT * FROM history")
@@ -37,13 +46,17 @@ func (h *HistoryModel) GetAll() ([]HistoryModel, error) {
 	return histories, nil
 }
 
-func (h *HistoryModel) GetByUserId(userId int, page int, limit int) ([]HistoryModel, error) {
+func (h *HistoryModel) GetByUserId(userId int, page int, limit int, filter string) ([]HistoryModel, error) {
+
+	if filter == "" {
+		filter = "%"
+	}
 	rows, err := config.DB.Query(`
 		SELECT history.id, history.name, history.status, history.action, history.created_at, history.bdd_source, history.bdd_target
 		FROM history
 		Join connection ON history.bdd_source = connection.id
-		WHERE connection.user_id = ?
-		LIMIT ? OFFSET ?`, userId, limit, page)
+		WHERE connection.user_id = ? AND history.action LIKE ?
+		LIMIT ? OFFSET ?`, userId, filter, limit, page)
 	if err != nil {
 		return []HistoryModel{}, err
 	}
