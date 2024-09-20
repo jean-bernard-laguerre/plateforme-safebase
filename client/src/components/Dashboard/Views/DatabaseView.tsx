@@ -47,6 +47,8 @@ const DatabaseView = () => {
     } else if (response.connections.length > 0) {
       console.log("response.connections", response.connections);
       setDatabases({ databases: response.connections });
+    } else {
+      setDatabases(null);
     }
   }
 
@@ -78,10 +80,6 @@ const DatabaseView = () => {
   useEffect(() => {
     getUserDatabase();
   }, [isModalOpen]);
-
-  useEffect(() => {
-    console.log("databases", databases);
-  }, [databases]);
 
   return (
     <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">

@@ -19,12 +19,14 @@ type restoreDTO struct {
 
 func createErrorResponse(ctx *fiber.Ctx, statusCode int, message string) error {
 	return ctx.Status(statusCode).JSON(fiber.Map{
+		"success": false,
 		"message": message,
 	})
 }
 
 func createSuccessResponse(ctx *fiber.Ctx, message string) error {
 	return ctx.Status(200).JSON(fiber.Map{
+		"success": true,
 		"message": message,
 	})
 }
@@ -111,10 +113,12 @@ func AddRoutes(app *fiber.App) {
 		backups, err := backup.GetByUserId(id)
 
 		if err != nil {
-			return fiber.NewError(500, "Internal server error")
+			// return fiber.NewError(500, "Internal server error")
+			return createErrorResponse(ctx, 500, "Internal server error")
 		}
 
 		return ctx.Status(200).JSON(fiber.Map{
+			"success": true,
 			"data": backups,
 		})
 	})
@@ -148,7 +152,8 @@ func AddRoutes(app *fiber.App) {
 	})
 
 	du.Delete("/:id", func(ctx *fiber.Ctx) error {
-		id, err := ctx.ParamsInt("id")
+		id, _ := ctx.ParamsInt("id")
+		bool, err := new(DumpModel).Delete(id)
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
 				"success": false,
@@ -156,8 +161,8 @@ func AddRoutes(app *fiber.App) {
 			})
 		} else {
 			return ctx.Status(200).JSON(fiber.Map{
-				"success": true,
-				"message": "Backup deleted successfully" + string(id),
+				"success": bool,
+				"message": "Task deleted successfully",
 			})
 		}
 	})

@@ -4,8 +4,6 @@ interface Task {
   Name: string;
   Cron_job: string;
   Connection_id: number;
-  Created_at: Date;
-  Active: boolean;
 }
 
 export const actions = {
@@ -33,7 +31,7 @@ export const actions = {
     }
   },
 
-  //Get all Tasks
+  //Get all Tasks from the user
   async getAll() {
     try {
       const response = await instance.get("/dump");
