@@ -15,7 +15,7 @@ services:
       - mysql
 
   mysql:
-    image: mysql
+    image: mysql:8
     container_name: Mysql
     environment:
       MYSQL_ROOT_PASSWORD: verysecure
