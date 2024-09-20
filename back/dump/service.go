@@ -84,15 +84,20 @@ func MysqlRestore(c *connection.ConnectionModel, fileName string) string {
 
 func PostgresRestore(c *connection.ConnectionModel, fileName string) string {
 	fmt.Println("Ok cron job")
-	cmd := exec.Command("pg_restore", "-h", c.Host, "-p", c.Port, "-u", c.User, c.Db_name)
+	cmd := exec.Command("psql", "-h", c.Host, "-p", c.Port, "-U", c.User, "-d", c.Db_name)
 	cmd.Env = append(os.Environ(), "PGPASSWORD="+c.Password)
 	infile, err := os.Open("./backups/postgres/" + fileName)
 	defer infile.Close()
+
+	var stderr bytes.Buffer
 	cmd.Stdin = infile
+	cmd.Stderr = &stderr
+
 	err = cmd.Run()
 	if err != nil {
+		fmt.Println(err.Error(), stderr.String())
 		SaveHistory(fileName, false, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
-		return fmt.Sprintf("Error:", err)
+		return fmt.Sprintf("Error:", err.Error())
 	} else {
 		SaveHistory(fileName, true, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
 		return fmt.Sprintf("Restore created successfully")
