@@ -43,7 +43,6 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
 
     const response = await actions.login(user);
 
-    console.log("PLOUT====>", response);
     if (response.success == false) {
       if (response.message == "Invalid input") {
         console.log("email not found");
@@ -60,7 +59,7 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
     } else {
       delete response.user.Password;
       localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("loggedIn", "true");
+      window.location.href = "/";
       return;
     }
   }
