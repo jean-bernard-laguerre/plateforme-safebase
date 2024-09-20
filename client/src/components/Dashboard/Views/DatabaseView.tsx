@@ -185,7 +185,8 @@ const TableRow = ({
         <Tooltip
           showArrow
           content="Sauvegarder"
-          placement="left"
+          placement="top"
+          closeDelay={0}
           className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
           <button
@@ -201,7 +202,8 @@ const TableRow = ({
         <Tooltip
           showArrow
           content="Supprimer"
-          placement="left"
+          placement="top"
+          closeDelay={0}
           className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
           <button
