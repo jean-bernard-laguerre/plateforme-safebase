@@ -1,11 +1,33 @@
 import { Tooltip } from "@nextui-org/tooltip";
 import { ArrowDownToLine, DatabaseZap, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatabaseForm } from "../Forms/DatabaseForm";
 import Modal from "../Modal";
+import { actions } from "@/services/connectionService";
+import { actions as dump } from "@/services/dumpService";
+
+interface User {
+  id: number;
+  email: string;
+}
+
+interface Database {
+  Id: number;
+  Name: string;
+  Db_name: string;
+  Db_type: string;
+  Host: string;
+  Port: number;
+}
+
+// interface de databases contenant un array de Database
+interface Databases {
+  databases: Database[];
+}
 
 const DatabaseView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [databases, setDatabases] = useState<Databases | null>(null);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -14,6 +36,52 @@ const DatabaseView = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  async function getUserDatabase() {
+    // get user databases
+    const response = await actions.getUserConnections();
+    console.log("response", response);
+    if (response.success === false) {
+      console.log("erreur lors de la récupération des connections:", response);
+      return;
+    } else if (response.connections.length > 0) {
+      console.log("response.connections", response.connections);
+      setDatabases({ databases: response.connections });
+    }
+  }
+
+  async function dumpDatabase(id: number) {
+    const response = await dump.dump(id);
+    console.log("response", response);
+    if (response.success === true) {
+      console.log("dump effectué avec succès", response.message);
+      //TODO: TOAST success
+    } else {
+      console.log("erreur lors du dump de la base:", response);
+      //TODO: TOAST error
+    }
+  }
+
+  async function deleteDatabase(id: number) {
+    const response = await actions.deleteConnection(id);
+    console.log("response", response);
+    if (response.success === true) {
+      console.log("connection supprimée avec succès", response.message);
+      //TODO: TOAST success
+      getUserDatabase();
+    } else {
+      //TODO: TOAST error
+      console.log("erreur lors de la suppression de la connection:", response);
+    }
+  }
+
+  useEffect(() => {
+    getUserDatabase();
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    console.log("databases", databases);
+  }, [databases]);
 
   return (
     <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
@@ -36,32 +104,31 @@ const DatabaseView = () => {
           </button>
         </Tooltip>
       </div>
-      <table className="w-full table-auto">
-        <TableHead></TableHead>
-        <tbody>
-          <TableRow
-            dbName="db1"
-            type="Postgres"
-            port={5432}
-            name="db1"
-            order={1}
-          ></TableRow>
-          <TableRow
-            dbName="db1"
-            type="Postgres"
-            port={5432}
-            name="db1"
-            order={2}
-          ></TableRow>
-          <TableRow
-            dbName="db1"
-            type="Postgres"
-            port={5432}
-            name="db1"
-            order={3}
-          ></TableRow>
-        </tbody>
-      </table>
+
+      {databases ? (
+        <table className="w-full table-auto">
+          <TableHead></TableHead>
+          <tbody>
+            {databases.databases.map((database, index) => (
+              <TableRow
+                key={database.Id}
+                id={database.Id}
+                dbName={database.Db_name}
+                type={database.Db_type}
+                port={database.Port}
+                name={database.Name}
+                order={index + 1}
+                dumpDatabase={dumpDatabase}
+                deleteDatabase={deleteDatabase}
+              ></TableRow>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className="text-center text-sm">
+          <span>Vous n'avez pas encore de base de données</span>
+        </div>
+      )}
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <DatabaseForm handleCloseModal={handleCloseModal} />
@@ -85,17 +152,23 @@ const TableHead = () => {
 };
 
 const TableRow = ({
+  id,
   dbName,
   type,
   port,
   name,
   order,
+  dumpDatabase,
+  deleteDatabase,
 }: {
+  id: number;
   dbName: string;
   type: string;
   port: number;
   name: string;
   order: number;
+  dumpDatabase: (id: number) => void;
+  deleteDatabase: (id: number) => void;
 }) => {
   return (
     <tr className={order % 2 ? "bg-stone-100 text-sm" : "text-sm "}>
@@ -110,7 +183,12 @@ const TableRow = ({
           placement="left"
           className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
-          <button className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8">
+          <button
+            className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8"
+            onClick={() => {
+              dumpDatabase(id);
+            }}
+          >
             <ArrowDownToLine size={16} />
           </button>
         </Tooltip>
@@ -121,7 +199,12 @@ const TableRow = ({
           placement="left"
           className="border border-slate-300 text-sm bg-slate-500 text-stone-50 rounded p-1 shadow-sm"
         >
-          <button className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8">
+          <button
+            className="hover:bg-stone-200 transition-colors grid place-content-center rounded text-sm size-8"
+            onClick={() => {
+              deleteDatabase(id);
+            }}
+          >
             <Trash2 size={16} />
           </button>
         </Tooltip>
