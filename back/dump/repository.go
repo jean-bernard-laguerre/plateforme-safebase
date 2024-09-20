@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 )
 
@@ -46,7 +47,7 @@ func (d *DumpModel) GetAll() ([]DumpModel, error) {
 
 func (d *DumpModel) GetByUserId(userId int) ([]DumpModel, error) {
 	rows, err := config.DB.Query(`
-		SELECT backup.id, backup.name, backup.cron_job, backup.connection_id, backup.created_at, backup.active
+		SELECT backup.id, backup.name, backup.cron_job, backup.connection_id, backup.created_at, backup.active, connection.db_name
 		FROM backup
 		Join connection ON backup.connection_id = connection.id
 		WHERE connection.user_id = ?`, userId)
@@ -59,7 +60,7 @@ func (d *DumpModel) GetByUserId(userId int) ([]DumpModel, error) {
 
 	for rows.Next() {
 		var d DumpModel
-		err := rows.Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at, &d.Active)
+		err := rows.Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at, &d.Active, &d.Db_name)
 		if err != nil {
 			return []DumpModel{}, err
 		}

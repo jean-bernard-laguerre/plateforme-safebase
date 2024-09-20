@@ -19,7 +19,7 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     Db_type: "mysql",
   });
 
-  const dbTypeModel = ["mysql", "postgresql"];
+  const dbTypeModel = ["mysql", "postgres"];
 
   async function test() {
     const response = await actions.connectTest(connection);

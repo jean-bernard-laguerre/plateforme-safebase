@@ -1,3 +1,4 @@
+import { Axios, isAxiosError } from "axios";
 import instance from "./config";
 
 interface Connection {
@@ -46,7 +47,15 @@ export const actions = {
       return response.data;
     } catch (err) {
       console.log("erreur lors de la récupération des connections:", err);
-      return err;
+      if (isAxiosError(err)) {
+        const error = {
+          success: false,
+          message: err?.message,
+        };
+        return error;
+      } else {
+        return err;
+      }
     }
   },
 
