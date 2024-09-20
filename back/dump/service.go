@@ -11,8 +11,6 @@ import (
 	"github.com/jean-bernard-laguerre/plateforme-safebase/history"
 )
 
-// TODO :=> create a function that create all cronjob for the backups
-
 func SaveHistory(name string, status bool, action string, created_at string, bdd_source int, bdd_target *int) (int, error) {
 	h := history.HistoryModel{}
 	return h.Create(name, status, action, created_at, bdd_source, bdd_target)
