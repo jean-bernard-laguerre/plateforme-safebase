@@ -1,6 +1,7 @@
 import { Command } from "cmdk";
 import { CirclePlus, Eye, LogOut } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const CommandMenu = ({
   open,
@@ -25,6 +26,7 @@ export const CommandMenu = ({
 
   const logout = () => {
     localStorage.removeItem("user");
+    toast.success(" 🥺 Déconnexion réussie");
     window.location.href = "/authentication";
   };
 

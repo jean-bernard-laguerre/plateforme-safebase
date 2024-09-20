@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import instance from "./config";
 
 interface Task {
@@ -38,7 +39,16 @@ export const actions = {
       return response.data;
     } catch (err) {
       console.log("erreur lors de la récupération des tâches:", err);
-      return err;
+      if (isAxiosError(err)) {
+        console.log("MOOK");
+        const error = {
+          success: false,
+          message: err?.message,
+        };
+        return error;
+      } else {
+        return err;
+      }
     }
   },
 

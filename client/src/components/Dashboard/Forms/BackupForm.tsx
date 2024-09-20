@@ -1,6 +1,7 @@
 import { actions as connect } from "@/services/connectionService";
 import { actions as dump } from "@/services/dumpService";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface BackupFormProps {
   handleCloseModal: () => void;
@@ -80,7 +81,9 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
     const response = await connect.getUserConnections();
     console.log("response", response);
     if (response.success === false) {
-      //TODO: TOAST error
+      toast.error("Erreur lors de la récupération des connections", {
+        description: response.message,
+      });
       console.log("erreur lors de la récupération des connections:", response);
       return;
     } else if (response.connections.length > 0) {
@@ -93,12 +96,13 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
     const response = await dump.createTask(task);
     console.log("response", response);
     if (response.success === true) {
-      //TODO: TOAST success
-      console.log("tâche ajoutée avec succès", response.message);
+      toast.success("Tâche ajoutée avec succès");
+
       handleCloseModal();
     } else {
-      //TODO: TOAST error
-      console.log("erreur lors de l'ajout de la tâche:", response);
+      toast.error("Erreur lors de l'ajout de la tâche", {
+        description: response.message,
+      });
     }
   }
 

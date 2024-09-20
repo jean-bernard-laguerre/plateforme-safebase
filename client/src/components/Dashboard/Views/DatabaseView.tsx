@@ -1,10 +1,11 @@
+import { actions } from "@/services/connectionService";
+import { actions as dump } from "@/services/dumpService";
 import { Tooltip } from "@nextui-org/tooltip";
 import { ArrowDownToLine, DatabaseZap, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { DatabaseForm } from "../Forms/DatabaseForm";
 import Modal from "../Modal";
-import { actions } from "@/services/connectionService";
-import { actions as dump } from "@/services/dumpService";
 
 interface User {
   id: number;
@@ -56,11 +57,11 @@ const DatabaseView = () => {
     const response = await dump.dump(id);
     console.log("response", response);
     if (response.success === true) {
-      console.log("dump effectué avec succès", response.message);
-      //TODO: TOAST success
+      toast.success("Backup effectué avec succès");
     } else {
-      console.log("erreur lors du dump de la base:", response);
-      //TODO: TOAST error
+      toast.error("Erreur lors du Backup de la base de données", {
+        description: response.message,
+      });
     }
   }
 
@@ -68,12 +69,12 @@ const DatabaseView = () => {
     const response = await actions.deleteConnection(id);
     console.log("response", response);
     if (response.success === true) {
-      console.log("connection supprimée avec succès", response.message);
-      //TODO: TOAST success
+      toast.success("Connection supprimée avec succès");
       getUserDatabase();
     } else {
-      //TODO: TOAST error
-      console.log("erreur lors de la suppression de la connection:", response);
+      toast.error("Erreur lors de la suppression de la connection", {
+        description: response.message,
+      });
     }
   }
 

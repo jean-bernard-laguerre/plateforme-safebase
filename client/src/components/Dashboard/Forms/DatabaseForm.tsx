@@ -1,5 +1,6 @@
 import { actions } from "@/services/connectionService";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface DatabaseFormProps {
   handleCloseModal: () => void;
@@ -35,9 +36,12 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     const response = await actions.addConnect(connection);
     console.log("response", response);
     if (response.success === true) {
+      toast.success("Base de données ajoutée avec succès");
       handleCloseModal();
     } else {
-      console.log("erreur lors de l'ajout de la connection", response);
+      toast.error("Erreur lors de l'ajout de la connection", {
+        description: response.message,
+      });
     }
   }
 

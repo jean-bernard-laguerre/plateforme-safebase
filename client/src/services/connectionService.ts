@@ -1,4 +1,4 @@
-import { Axios, isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import instance from "./config";
 
 interface Connection {
@@ -48,6 +48,7 @@ export const actions = {
     } catch (err) {
       console.log("erreur lors de la récupération des connections:", err);
       if (isAxiosError(err)) {
+        console.log("MOOK");
         const error = {
           success: false,
           message: err?.message,
