@@ -46,13 +46,17 @@ func (h *HistoryModel) GetAll() ([]HistoryModel, error) {
 	return histories, nil
 }
 
-func (h *HistoryModel) GetByUserId(userId int, page int, limit int) ([]HistoryModel, error) {
+func (h *HistoryModel) GetByUserId(userId int, page int, limit int, filter string) ([]HistoryModel, error) {
+
+	if filter == "" {
+		filter = "%"
+	}
 	rows, err := config.DB.Query(`
 		SELECT history.id, history.name, history.status, history.action, history.created_at, history.bdd_source, history.bdd_target
 		FROM history
 		Join connection ON history.bdd_source = connection.id
-		WHERE connection.user_id = ?
-		LIMIT ? OFFSET ?`, userId, limit, page)
+		WHERE connection.user_id = ? AND history.action LIKE ?
+		LIMIT ? OFFSET ?`, userId, filter, limit, page)
 	if err != nil {
 		return []HistoryModel{}, err
 	}
