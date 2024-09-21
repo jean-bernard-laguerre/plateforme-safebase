@@ -93,19 +93,6 @@ func AddRoutes(app *fiber.App) {
 		}
 	})
 
-	/* du.Get("/", func(ctx *fiber.Ctx) error {
-		backup := new(DumpModel)
-		backups, err := backup.GetAll()
-
-		if err != nil {
-			return fiber.NewError(500, "Internal server error")
-		}
-
-		return ctx.Status(200).JSON(fiber.Map{
-			"data": backups,
-		})
-	}) */
-
 	du.Get("/", func(ctx *fiber.Ctx) error {
 		id := ctx.Locals("userId").(int)
 
@@ -160,6 +147,7 @@ func AddRoutes(app *fiber.App) {
 				"message": "Invalid input",
 			})
 		} else {
+			RemoveCronJob(id)
 			return ctx.Status(200).JSON(fiber.Map{
 				"success": bool,
 				"message": "Task deleted successfully",
@@ -199,10 +187,10 @@ func AddRoutes(app *fiber.App) {
 
 		var result string
 		if dbConn.Db_type == "postgres" {
-			result = PostgresRestore(&dbConn, h.Name, restore.ConnectionId)
+			result = PostgresRestore(&dbConn, h.Name, h.Bdd_source)
 		}
 		if dbConn.Db_type == "mysql" {
-			result = MysqlRestore(&dbConn, h.Name, restore.ConnectionId)
+			result = MysqlRestore(&dbConn, h.Name, h.Bdd_source)
 		}
 
 		if result != "Restore created successfully" {

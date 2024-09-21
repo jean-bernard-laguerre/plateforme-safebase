@@ -32,6 +32,8 @@ const BackupView = () => {
     setIsModalOpen(false);
   };
 
+  //TODO: PILLS + legende
+
   async function getUserBackups() {
     // get user backups
     const response = await dump.getAll();
@@ -284,7 +286,7 @@ const TableRow = ({
             <button
               className="hover:bg-stone-200 transition-colors grid place-content-center rounded-full text-sm size-8"
               onClick={() => {
-                toggleTask(1, false);
+                toggleTask(id, false);
               }}
             >
               <Pause size={16} />
@@ -301,7 +303,7 @@ const TableRow = ({
             <button
               className="hover:bg-stone-200 transition-colors grid place-content-center rounded-full text-sm size-8"
               onClick={() => {
-                toggleTask(1, true);
+                toggleTask(id, true);
               }}
             >
               <Play size={16} />

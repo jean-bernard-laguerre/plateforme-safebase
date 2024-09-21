@@ -17,7 +17,6 @@ interface History {
 }
 
 const RestoreContent = () => {
-
   const [page, setPage] = useState(1);
   const [history, setHistory] = useState<History[]>();
 
@@ -32,58 +31,52 @@ const RestoreContent = () => {
       console.log("erreur lors de la récupération des backups:", response);
       setHistory([]);
       return;
-    } 
+    }
     setHistory(response.history);
   }
 
   const handlenextPage = () => {
     setPage((prev) => prev + 1);
-  }
+  };
 
   const handlePrevPage = () => {
     setPage((prev) => Math.max(prev - 1, 1));
-  }
+  };
 
   return (
-      <table className="w-full table-auto">
-        <TableHead></TableHead>
-        <tbody>
-          {history?.map((h, index) => (
-            <TableRow
-              key={h.Id}
-              entry={h}
-              order={index}
-            ></TableRow>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className="text-sm text-stone-500 pt-3" colSpan={6}>
-              <div className="flex justify-between items-center">
-                <span>
-                  Page {page}
-                </span>
-                <div className="flex items-center space-x-1">
-                  <button
-                    disabled={page === 1}
-                    className="p-1 rounded border border-violet-500 bg-violet-400 items-center justify-center text-stone-50 disabled:opacity-50"
-                    onClick={handlePrevPage}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button
-                    disabled={history?.length !== 10}
-                    className="p-1 rounded border border-violet-500 bg-violet-400 items-center justify-center text-stone-50 disabled:opacity-50"
-                    onClick={handlenextPage}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
+    <table className="w-full table-auto">
+      <TableHead></TableHead>
+      <tbody>
+        {history?.map((h, index) => (
+          <TableRow key={h.Id} entry={h} order={index}></TableRow>
+        ))}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td className="text-sm text-stone-500 pt-3" colSpan={6}>
+            <div className="flex justify-between items-center">
+              <span>Page {page}</span>
+              <div className="flex items-center space-x-1">
+                <button
+                  disabled={page === 1}
+                  className="p-1 rounded border border-violet-500 bg-violet-400 items-center justify-center text-stone-50 disabled:opacity-50"
+                  onClick={handlePrevPage}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  disabled={history?.length !== 10}
+                  className="p-1 rounded border border-violet-500 bg-violet-400 items-center justify-center text-stone-50 disabled:opacity-50"
+                  onClick={handlenextPage}
+                >
+                  <ChevronRight size={16} />
+                </button>
               </div>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   );
 };
 
@@ -102,14 +95,7 @@ const TableHead = () => {
   );
 };
 
-const TableRow = ({
-  entry,
-  order,
-}: {
-  entry: History;
-  order: number;
-}) => {
-
+const TableRow = ({ entry, order }: { entry: History; order: number }) => {
   const DateDisplay = new Date(entry.Created_at);
   const createdAtDisplay = DateDisplay.toLocaleString("fr-FR", {
     month: "long",
@@ -118,9 +104,11 @@ const TableRow = ({
     minute: "numeric",
   });
 
+  const name = entry.Name.split("T");
+
   return (
     <tr className={order % 2 ? "bg-violet-100 text-sm" : "text-sm"}>
-      <td className="text-start py-3 px-1.5">{entry.Name}</td>
+      <td className="text-start py-3 px-1.5 font-semibold">{name[0]}</td>
       <td className="text-start py-3 px-1.5">
         {entry.Status ? (
           <span className="bg-[#6df3d2] inline-block rounded-full w-20 text-center px-2 text-stone-950">
