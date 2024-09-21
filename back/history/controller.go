@@ -33,7 +33,8 @@ func AddRoutes(app *fiber.App) {
 
 		if err := ctx.QueryParser(&params); err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"error": err.Error(),
+				"success": false,
+				"error":   err.Error(),
 			})
 		}
 
@@ -41,10 +42,12 @@ func AddRoutes(app *fiber.App) {
 		histories, err := history.GetByUserId(id, params.Page, params.Limit, params.Filter)
 		if err != nil {
 			return ctx.Status(400).JSON(fiber.Map{
-				"error": err.Error(),
+				"success": false,
+				"error":   err.Error(),
 			})
 		}
 		return ctx.Status(200).JSON(fiber.Map{
+			"success": true,
 			"history": histories,
 		})
 	})

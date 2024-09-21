@@ -1,6 +1,8 @@
 package history
 
 import (
+	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jean-bernard-laguerre/plateforme-safebase/config"
 )
@@ -52,11 +54,13 @@ func (h *HistoryModel) GetByUserId(userId int, page int, limit int, filter strin
 		filter = "%"
 	}
 	rows, err := config.DB.Query(`
-		SELECT history.id, history.name, history.status, history.action, history.created_at, history.bdd_source, history.bdd_target
+		SELECT history.id, history.name, history.status, history.action, history.created_at, history.bdd_source, history.bdd_target, connection.db_type AS bdd_source_type, connection.name AS bdd_source_name, connection2.name AS bdd_target_name
 		FROM history
-		Join connection ON history.bdd_source = connection.id
+		JOIN connection ON history.bdd_source = connection.id
+		LEFT JOIN connection AS connection2 ON history.bdd_target = connection2.id
 		WHERE connection.user_id = ? AND history.action LIKE ?
-		LIMIT ? OFFSET ?`, userId, filter, limit, page)
+		ORDER BY history.created_at DESC
+		LIMIT ? OFFSET ?`, userId, filter, limit, (page-1)*limit)
 	if err != nil {
 		return []HistoryModel{}, err
 	}
@@ -66,8 +70,9 @@ func (h *HistoryModel) GetByUserId(userId int, page int, limit int, filter strin
 
 	for rows.Next() {
 		var h HistoryModel
-		err := rows.Scan(&h.Id, &h.Name, &h.Status, &h.Action, &h.Created_at, &h.Bdd_source, &h.Bdd_target)
+		err := rows.Scan(&h.Id, &h.Name, &h.Status, &h.Action, &h.Created_at, &h.Bdd_source, &h.Bdd_target, &h.Bdd_source_type, &h.Bdd_source_name, &h.Bdd_target_name)
 		if err != nil {
+			fmt.Println(err)
 			return []HistoryModel{}, err
 		}
 		histories = append(histories, h)
