@@ -23,6 +23,11 @@ export const CommandMenu = ({
     return () => document.removeEventListener("keydown", down);
   }, [setOpen]);
 
+  const logout = () => {
+    localStorage.removeItem("user");
+    window.location.href = "/authentication";
+  };
+
   return (
     <Command.Dialog
       open={open}
@@ -90,7 +95,10 @@ export const CommandMenu = ({
             <Command.Separator />
           </Command.Group>
 
-          <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-50 hover:bg-stone-700 bg-stone-900 rounded items-center gap-2">
+          <Command.Item
+            className="flex cursor-pointer transition-colors p-2 text-sm text-stone-50 hover:bg-stone-700 bg-stone-900 rounded items-center gap-2"
+            onSelect={() => logout()}
+          >
             <LogOut />
             Sign Out
           </Command.Item>
