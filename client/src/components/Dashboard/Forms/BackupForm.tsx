@@ -184,7 +184,7 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
               className={`ml-2 text-sm font-semibold p-2 rounded ${
                 formOk
                   ? "bg-green-500 text-white"
-                  : "bg-gray-300 text-stone-500 cursor-not-allowed"
+                  : "bg-violet-100 text-stone-500 cursor-not-allowed"
               }`}
               onClick={(e) => {
                 e.preventDefault();
