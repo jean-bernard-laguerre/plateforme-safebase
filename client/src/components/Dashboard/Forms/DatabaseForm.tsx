@@ -20,14 +20,22 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     Db_type: "mysql",
   });
 
+  //TODO: COLORS
+
   const dbTypeModel = ["mysql", "postgres"];
 
   async function test() {
     const response = await actions.connectTest(connection);
     console.log("response", response);
     if (response.success === true) {
+      //TODO: emoji thumbs up
+      toast.success("Test de connection réussi  ");
       setTestConnection(true);
     } else {
+      //TODO: emoji thumbs down
+      toast.error("Erreur lors du test de connection", {
+        description: response.response.data.error,
+      });
       setTestConnection(false);
     }
   }

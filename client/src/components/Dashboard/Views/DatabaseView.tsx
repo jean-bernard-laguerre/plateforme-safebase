@@ -38,6 +38,10 @@ const DatabaseView = () => {
     setIsModalOpen(false);
   };
 
+  //TODO: PILLS pour les types de db
+  //TODO: ICONS pour la sauvegarde
+  //TODO: LIGNES violettes
+
   async function getUserDatabase() {
     // get user databases
     const response = await actions.getUserConnections();
