@@ -23,8 +23,6 @@ export const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    console.log("AUTHHH", isAuthenticated);
-
     if (!isAuthenticated) {
       setCurrentView("authentication");
     } else if (pathname) {

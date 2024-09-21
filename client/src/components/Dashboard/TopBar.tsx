@@ -1,8 +1,10 @@
 import { LogOut } from "lucide-react";
+import { toast } from "sonner";
 
 export const TopBar = () => {
   const logout = () => {
     localStorage.removeItem("user");
+    toast.success(" 🥺 Déconnexion réussie");
     window.location.href = "/authentication";
   };
 

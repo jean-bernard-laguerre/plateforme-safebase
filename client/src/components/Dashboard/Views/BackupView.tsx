@@ -1,9 +1,10 @@
+import { actions as dump } from "@/services/dumpService";
 import { Tooltip } from "@nextui-org/tooltip";
 import { DatabaseZap, Pause, Play, Save, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import BackupForm from "../Forms/BackupForm";
 import Modal from "../Modal";
-import { actions as dump } from "@/services/dumpService";
 
 interface Backup {
   Id: number;
@@ -36,8 +37,10 @@ const BackupView = () => {
     const response = await dump.getAll();
     console.log("response", response);
     if (response.success === false) {
-      //TODO: TOAST error
-      console.log("erreur lors de la récupération des backups:", response);
+      toast.error("Erreur lors de la récupération des backups", {
+        description: response.message,
+      });
+
       return;
     } else if (response.data.length > 0) {
       console.log("response.tasks", response.data);
@@ -51,12 +54,12 @@ const BackupView = () => {
     const response = await dump.dump(id);
     console.log("response", response);
     if (response.success === true) {
-      console.log("dump effectué avec succès", response.message);
       getUserBackups();
-      //TODO: TOAST success
+      toast.success("Backup effectué avec succès");
     } else {
-      console.log("erreur lors du dump de la base:", response);
-      //TODO: TOAST error
+      toast.error("Erreur lors du Backup de la base de données", {
+        description: response.message,
+      });
     }
   }
 
@@ -64,12 +67,12 @@ const BackupView = () => {
     const response = await dump.deleteTask(id);
     console.log("response", response);
     if (response.success === true) {
-      console.log("tâche supprimée avec succès", response.message);
-      //TODO: TOAST success
+      toast.success("Tâche supprimée avec succès");
       getUserBackups();
     } else {
-      console.log("erreur lors de la suppression de la tâche:", response);
-      //TODO: TOAST error
+      toast.error("Erreur lors de la suppression de la tâche", {
+        description: response.message,
+      });
     }
   }
 
@@ -77,12 +80,12 @@ const BackupView = () => {
     const response = await dump.toggleTask(id, value);
     console.log("response", response);
     if (response.success === true) {
-      console.log("tâche modifiée avec succès", response.message);
-      //TODO: TOAST success
+      toast.success("Tâche modifiée avec succès");
       getUserBackups();
     } else {
-      console.log("erreur lors de la modification de la tâche:", response);
-      //TODO: TOAST error
+      toast.error("Erreur lors de la modification de la tâche", {
+        description: response.message,
+      });
     }
   }
 

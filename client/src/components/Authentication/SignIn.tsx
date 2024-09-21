@@ -1,6 +1,7 @@
 "use client";
 import { actions } from "@/services/userService";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface User {
   email: string;
@@ -58,6 +59,7 @@ const SignIn: React.FC<SignInProps> = ({ setAuth }) => {
       }
     } else {
       delete response.user.Password;
+      toast.success(" 👌 Vous êtes connecté!");
       localStorage.setItem("user", JSON.stringify(response.user));
       window.location.href = "/";
       return;
