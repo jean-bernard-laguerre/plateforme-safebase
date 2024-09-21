@@ -64,7 +64,7 @@ func MysqlDump(c *connection.ConnectionModel) string {
 	}
 }
 
-func MysqlRestore(c *connection.ConnectionModel, fileName string) string {
+func MysqlRestore(c *connection.ConnectionModel, fileName string, source int) string {
 	fmt.Println("Ok cron job")
 	cmd := exec.Command("mysql", "-h", c.Host, "--port", c.Port, "-u", c.User, "--password="+c.Password, c.Db_name)
 	infile, err := os.Open("./backups/mysql/" + fileName)
@@ -72,15 +72,15 @@ func MysqlRestore(c *connection.ConnectionModel, fileName string) string {
 	cmd.Stdin = infile
 	err = cmd.Run()
 	if err != nil {
-		SaveHistory(fileName, false, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		SaveHistory(fileName, false, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), source, &c.Id)
 		return fmt.Sprintf("Error:", err)
 	} else {
-		SaveHistory(fileName, true, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		SaveHistory(fileName, true, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), source, &c.Id)
 		return fmt.Sprintf("Restore created successfully")
 	}
 }
 
-func PostgresRestore(c *connection.ConnectionModel, fileName string) string {
+func PostgresRestore(c *connection.ConnectionModel, fileName string, source int) string {
 	fmt.Println("Ok cron job")
 	cmd := exec.Command("psql", "-h", c.Host, "-p", c.Port, "-U", c.User, "-d", c.Db_name)
 	cmd.Env = append(os.Environ(), "PGPASSWORD="+c.Password)
@@ -94,10 +94,10 @@ func PostgresRestore(c *connection.ConnectionModel, fileName string) string {
 	err = cmd.Run()
 	if err != nil {
 		fmt.Println(err.Error(), stderr.String())
-		SaveHistory(fileName, false, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		SaveHistory(fileName, false, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), source, &c.Id)
 		return fmt.Sprintf("Error:", err.Error())
 	} else {
-		SaveHistory(fileName, true, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), c.Id, nil)
+		SaveHistory(fileName, true, "Restore", time.Now().Local().Format("2006-01-02T15-04-05"), source, &c.Id)
 		return fmt.Sprintf("Restore created successfully")
 	}
 }

@@ -119,7 +119,7 @@ func AddRoutes(app *fiber.App) {
 
 		return ctx.Status(200).JSON(fiber.Map{
 			"success": true,
-			"data": backups,
+			"data":    backups,
 		})
 	})
 
@@ -199,10 +199,10 @@ func AddRoutes(app *fiber.App) {
 
 		var result string
 		if dbConn.Db_type == "postgres" {
-			result = PostgresRestore(&dbConn, h.Name)
+			result = PostgresRestore(&dbConn, h.Name, restore.ConnectionId)
 		}
 		if dbConn.Db_type == "mysql" {
-			result = MysqlRestore(&dbConn, h.Name)
+			result = MysqlRestore(&dbConn, h.Name, restore.ConnectionId)
 		}
 
 		if result != "Restore created successfully" {

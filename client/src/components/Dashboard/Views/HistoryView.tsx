@@ -1,7 +1,9 @@
+import Tabs from "../Tabs/Tabs";
+
 const HistoryView = () => {
   return (
     <div>
-      <p>Historique View</p>
+      <Tabs />
     </div>
   );
 };

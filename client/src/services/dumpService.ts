@@ -63,6 +63,19 @@ export const actions = {
     }
   },
 
+  async restore(dumpId: number, connectionId: number) {
+    try {
+      const response = await instance.post("/restore", {
+        ConnectionId: connectionId,
+        HistoryId: dumpId
+      });
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors de la restauration de la base:", err);
+      return err;
+    }
+  },
+
   //Delete a task
   async deleteTask(id: number) {
     try {
