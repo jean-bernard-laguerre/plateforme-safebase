@@ -9,7 +9,7 @@ const Logo = () => {
         <span className="font-logo font-bold italic text-xl block leading-tight">
           Dump&Dumber
         </span>
-        <span className="text-[10px]  font-thin whitespace-nowrap block">
+        <span className="text-[10px]  font-thin whitespace-nowrap block text-stone-700">
           Database backups for dummies
         </span>
       </div>
