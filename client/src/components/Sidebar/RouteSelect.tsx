@@ -5,7 +5,6 @@ import {
   History,
   House,
   LucideIcon,
-  User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,7 +43,6 @@ export const RouteSelect = () => {
       <SidebarLink href="/database" title="Database" Icon={DatabaseZap} />
       <SidebarLink href="/backup" title="Backup" Icon={DatabaseBackup} />
       <SidebarLink href="/history" title="History" Icon={History} />
-      <SidebarLink href="/authentication" title="Authentication" Icon={User} />
     </div>
   );
 };
