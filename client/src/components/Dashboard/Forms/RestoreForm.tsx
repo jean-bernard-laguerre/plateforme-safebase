@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
 import { actions as connect } from "@/services/connectionService";
 import { actions as dump } from "@/services/dumpService";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 interface History {
   Id: number;
   Name: string;
@@ -45,13 +46,13 @@ const RestoreForm = ({
     const response = await connect.getUserConnections();
     console.log("response", response);
     if (response.success === false) {
-      //TODO: TOAST error
-      console.log("erreur lors de la récupération des connections:", response);
+      toast.error("Erreur lors de la récupération des connections");
       return;
     } else if (response.connections.length > 0) {
       console.log("response.connections", response.connections);
       const filtered = response.connections.filter(
-        (db: Database) => db.Db_type === history.Bdd_source_type
+        (db: Database) =>
+          db.Id !== history.Bdd_source && db.Db_type === history.Bdd_source_type
       );
       setDatabases({ databases: filtered });
     }
@@ -61,7 +62,8 @@ const RestoreForm = ({
     const response = await dump.restore(history.Id, restoreTarget);
     console.log("response", response);
     if (response.success === true) {
-      console.log("restauration effectuée avec succès", response.message);
+      toast.success("Restauration effectuée avec succès");
+
       close();
     } else {
       console.log("erreur lors de la restauration de la base:", response);
