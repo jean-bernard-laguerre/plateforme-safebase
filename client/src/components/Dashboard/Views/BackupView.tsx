@@ -32,8 +32,6 @@ const BackupView = () => {
     setIsModalOpen(false);
   };
 
-  //TODO: PILLS + legende
-
   async function getUserBackups() {
     // get user backups
     const response = await dump.getAll();

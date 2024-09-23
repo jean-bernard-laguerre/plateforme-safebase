@@ -20,13 +20,11 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     Db_type: "mysql",
   });
 
-  //TODO: COLORS
-
   const dbTypeModel = ["mysql", "postgres"];
 
   async function test() {
     const response = await actions.connectTest(connection);
-    console.log("response", response);
+
     if (response.success === true) {
       toast.success("Test de connection réussi 👍 ");
       setTestConnection(true);
@@ -40,7 +38,6 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
 
   async function addConnection() {
     const response = await actions.addConnect(connection);
-    console.log("response", response);
     if (response.success === true) {
       toast.success("Base de données ajoutée avec succès");
       handleCloseModal();
@@ -151,14 +148,20 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
               className="text-sm font-semibold bg-violet-500 text-stone-50 p-2 rounded hover:bg-violet-600"
               onClick={(e) => {
                 e.preventDefault();
-                console.log("test connection");
                 test();
               }}
             >
               Test Connection
             </button>
-            {/* une icone validé si la connection est bonne */}
-            {testConnection && <span className="text-green-500 ml-2">✔️</span>}
+
+            {testConnection && (
+              <span
+                className="ml-2 text-green-500
+            "
+              >
+                ✔️
+              </span>
+            )}
           </div>
 
           <div>
@@ -178,7 +181,7 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
               }`}
               onClick={(e) => {
                 e.preventDefault();
-                console.log("add connection");
+
                 addConnection();
               }}
             >
