@@ -39,7 +39,7 @@ const BackupView = () => {
     const response = await dump.getAll();
     console.log("response", response);
     if (response.success === false) {
-      toast.error("Erreur lors de la récupération des backups", {
+      toast.error("An error occured while fetching backups:", {
         description: response.message,
       });
 
@@ -57,9 +57,9 @@ const BackupView = () => {
     console.log("response", response);
     if (response.success === true) {
       getUserBackups();
-      toast.success("Backup effectué avec succès");
+      toast.success("Backup completed successfully");
     } else {
-      toast.error("Erreur lors du Backup de la base de données", {
+      toast.error("An error occured during the database backup:", {
         description: response.message,
       });
     }
@@ -69,10 +69,10 @@ const BackupView = () => {
     const response = await dump.deleteTask(id);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Tâche supprimée avec succès");
+      toast.success("Task deleted successfully");
       getUserBackups();
     } else {
-      toast.error("Erreur lors de la suppression de la tâche", {
+      toast.error("An error occured during the task suppression:", {
         description: response.message,
       });
     }
@@ -82,10 +82,10 @@ const BackupView = () => {
     const response = await dump.toggleTask(id, value);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Tâche modifiée avec succès");
+      toast.success("Task modified successfully");
       getUserBackups();
     } else {
-      toast.error("Erreur lors de la modification de la tâche", {
+      toast.error("An error occured during the task modification", {
         description: response.message,
       });
     }
@@ -142,7 +142,9 @@ const BackupView = () => {
         </table>
       ) : (
         <div className="text-center text-sm">
-          <span>Vous n'avez pas encore de tâches programmées</span>
+          <span>
+            You have no scheduled backups currently.
+          </span>
         </div>
       )}
 

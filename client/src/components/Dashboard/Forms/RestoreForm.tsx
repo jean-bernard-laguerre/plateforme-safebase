@@ -45,7 +45,7 @@ const RestoreForm = ({
     const response = await connect.getUserConnections();
     console.log("response", response);
     if (response.success === false) {
-      toast.error("Erreur lors de la récupération des connections");
+      toast.error("An error occured while fetching databases:");
       return;
     } else if (response.connections.length > 0) {
       console.log("response.connections", response.connections);

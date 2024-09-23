@@ -28,10 +28,10 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     const response = await actions.connectTest(connection);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Test de connection réussi 👍 ");
+      toast.success("Connection test successful 👍 ");
       setTestConnection(true);
     } else {
-      toast.error("Erreur lors du test de connection 👎 ", {
+      toast.error("An error occured during the connection test 👎 ", {
         description: response.response.data.error,
       });
       setTestConnection(false);
@@ -42,10 +42,10 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     const response = await actions.addConnect(connection);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Base de données ajoutée avec succès");
+      toast.success("Database added successfully");
       handleCloseModal();
     } else {
-      toast.error("Erreur lors de l'ajout de la connection", {
+      toast.error("An error occured during the addition of the database:", {
         description: response.message,
       });
     }
@@ -132,7 +132,7 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium">Nom personnalisé</label>
+          <label className="block text-sm font-medium">Custom name</label>
           <input
             type="text"
             className="w-full p-2 border rounded"
