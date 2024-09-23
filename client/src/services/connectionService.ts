@@ -48,7 +48,6 @@ export const actions = {
     } catch (err) {
       console.log("erreur lors de la récupération des connections:", err);
       if (isAxiosError(err)) {
-        console.log("MOOK");
         const error = {
           success: false,
           message: err?.message,

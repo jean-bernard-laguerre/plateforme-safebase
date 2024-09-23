@@ -1,6 +1,6 @@
 "use client";
 
-import { DatabaseBackup } from "lucide-react";
+import { History } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import BackupContent from "./BackupContent";
 import RestoreContent from "./RestoreContent";
@@ -31,8 +31,8 @@ const Tabs = () => {
     <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="flex items-center gap-1.5 font-medium">
-          <DatabaseBackup />
-          BackUps
+          <History />
+          History
         </h3>
       </div>
       <div className=" flex flex-col gap-y-1 w-full">

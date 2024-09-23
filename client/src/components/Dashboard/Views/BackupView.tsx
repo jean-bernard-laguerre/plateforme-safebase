@@ -1,6 +1,6 @@
 import { actions as dump } from "@/services/dumpService";
 import { Tooltip } from "@nextui-org/tooltip";
-import { DatabaseZap, Pause, Play, Save, Trash2 } from "lucide-react";
+import { DatabaseBackup, Pause, Play, Save, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import BackupForm from "../Forms/BackupForm";
@@ -31,6 +31,8 @@ const BackupView = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  //TODO: PILLS + legende
 
   async function getUserBackups() {
     // get user backups
@@ -99,7 +101,7 @@ const BackupView = () => {
     <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="flex items-center gap-1.5 font-medium">
-          <DatabaseZap />
+          <DatabaseBackup />
           BackUps
         </h3>
         <Tooltip
@@ -116,32 +118,6 @@ const BackupView = () => {
           </button>
         </Tooltip>
       </div>
-      {/* <table className="w-full table-auto">
-        <TableHead></TableHead>
-        <tbody>
-          <TableRow
-            name="backup1"
-            cron="0 0 * * *"
-            dbName="db1"
-            createdAt="2021-10-10"
-            order={1}
-          ></TableRow>
-          <TableRow
-            name="backup2"
-            cron="0 0 * * *"
-            dbName="db1"
-            createdAt="2021-10-10"
-            order={2}
-          ></TableRow>
-          <TableRow
-            name="backup3"
-            cron="0 0 * * *"
-            dbName="db1"
-            createdAt="2021-10-10"
-            order={3}
-          ></TableRow>
-        </tbody>
-      </table> */}
       {backups ? (
         <table className="w-full table-auto">
           <TableHead></TableHead>
@@ -284,7 +260,7 @@ const TableRow = ({
             <button
               className="hover:bg-stone-200 transition-colors grid place-content-center rounded-full text-sm size-8"
               onClick={() => {
-                toggleTask(1, false);
+                toggleTask(id, false);
               }}
             >
               <Pause size={16} />
@@ -301,7 +277,7 @@ const TableRow = ({
             <button
               className="hover:bg-stone-200 transition-colors grid place-content-center rounded-full text-sm size-8"
               onClick={() => {
-                toggleTask(1, true);
+                toggleTask(id, true);
               }}
             >
               <Play size={16} />
