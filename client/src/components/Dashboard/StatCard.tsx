@@ -1,7 +1,8 @@
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import { Database, DatabaseBackup, History } from "lucide-react";
-import React from "react";
+import React, { use, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
+import { actions as historyAction } from "@/services/historyService";
 
 // Enregistre les composants de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -23,27 +24,53 @@ interface ChartData {
   }>;
 }
 
+interface Overview {
+  Total: number;
+  backup_success: number;
+  backup_fail: number;
+  restore_success: number;
+  restore_fail: number;
+}
+
 export const StatCards: React.FC = () => {
+
+  const [overview, setOverview] = React.useState<Overview>();
+
+  useEffect(() => {
+    getOverview();
+  }, []);
+
+  const getOverview = async () => {
+    const response = await historyAction.getOverview();
+    if (response.success !== true) {
+      console.log("erreur lors de la récupération des backups:", response);
+      return;
+    }
+    setOverview(response.overview);
+  };
+
   return (
     <>
-      <Card
-        icon={<DatabaseBackup />}
-        title="Backups"
-        data={createChartData([60, 40], ["Success", "Failed"])}
-        colSpan={4}
-      />
-      <Card
-        icon={<History />}
-        title="Restores"
-        data={createChartData([80, 20], ["Completed", "Failed"])}
-        colSpan={4}
-      />
-      <Card
-        icon={<Database />}
-        title="Databases"
-        data={createChartData([30, 70], ["Used", "Available"])}
-        colSpan={4}
-      />
+      { overview && <>
+        <Card
+          icon={<DatabaseBackup />}
+          title="Backups"
+          data={createChartData([overview?.backup_success, overview?.backup_fail], ["Completed", "Failed"])}
+          colSpan={4}
+        />
+        <Card
+          icon={<History />}
+          title="Restores"
+          data={createChartData([overview?.restore_success, overview?.restore_fail], ["Completed", "Failed"])}
+          colSpan={4}
+        />
+        <Card
+          icon={<Database />}
+          title="Databases"
+          data={createChartData([30, 70], ["Used", "Available"])}
+          colSpan={4}
+        />
+      </>}
     </>
   );
 };

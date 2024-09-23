@@ -11,4 +11,15 @@ export const actions = {
       return err;
     }
   },
+
+  async getOverview() {
+    try {
+      const response = await instance.get("/history/overview");
+      return response.data;
+    } catch (err) {
+      console.log("erreur lors de la requête d'overview:",
+        err);
+      return
+    }
+  }
 };
