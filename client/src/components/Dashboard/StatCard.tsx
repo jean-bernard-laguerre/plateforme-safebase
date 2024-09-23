@@ -1,7 +1,9 @@
+"use client";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import { Database, DatabaseBackup, History } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
+import { actions as connecActions } from "@/services/connectionService";
 
 // Enregistre les composants de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -10,6 +12,12 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 interface CardProps {
   title: string;
   data: ChartData;
+  icon?: React.ReactNode;
+}
+
+interface CardPropsDb {
+  title: string;
+  data: number;
   icon?: React.ReactNode;
 }
 
@@ -23,37 +31,72 @@ interface ChartData {
   }>;
 }
 
+interface BarData {
+  dataPoint: number;
+}
+
+interface DatabaseInterface {
+  Id: number;
+  Name: string;
+  Db_name: string;
+  Db_type: string;
+  Host: string;
+  Port: number;
+}
+
+// interface de databases contenant un array de Database
+interface Databases {
+  databases: DatabaseInterface[];
+}
+
 export const StatCards: React.FC = () => {
+  const [databases, setDatabases] = useState<Databases | null>(null);
+  const [nbDatabases, setNbDatabases] = useState<number>(0);
+
+  async function getUserDatabase() {
+    // get user databases
+    const response = await connecActions.getUserConnections();
+    console.log("response", response);
+    if (response.success === false) {
+      console.log("erreur lors de la récupération des connections:", response);
+      return;
+    } else if (response.connections.length > 0) {
+      console.log("response.connections", response.connections);
+      setDatabases({ databases: response.connections });
+    } else {
+      setDatabases(null);
+    }
+  }
+
+  useEffect(() => {
+    getUserDatabase();
+  }, []);
+
+  useEffect(() => {
+    if (databases) {
+      console.log("databases AAAAAAAAAA", databases.databases.length);
+      setNbDatabases(databases.databases.length);
+    }
+  }, [databases]);
+
   return (
     <>
       <Card
         icon={<DatabaseBackup />}
         title="Backups"
         data={createChartData([60, 40], ["Success", "Failed"])}
-        colSpan={4}
       />
       <Card
         icon={<History />}
         title="Restores"
         data={createChartData([80, 20], ["Completed", "Failed"])}
-        colSpan={4}
       />
-      <Card
-        icon={<Database />}
-        title="Databases"
-        data={createChartData([30, 70], ["Used", "Available"])}
-        colSpan={4}
-      />
+      <CardDb icon={<Database />} title="Databases" data={nbDatabases} />
     </>
   );
 };
 
-const Card: React.FC<CardProps & { colSpan: number }> = ({
-  icon,
-  title,
-  data,
-  colSpan,
-}) => {
+const Card: React.FC<CardProps> = ({ icon, title, data }) => {
   return (
     <div
       // className={` p-4 rounded border border-stone-200 shadow-md col-span-${colSpan}`}
@@ -64,6 +107,21 @@ const Card: React.FC<CardProps & { colSpan: number }> = ({
         <h3 className="font-medium">{title}</h3>
       </div>
       <Pie data={data} />
+    </div>
+  );
+};
+
+const CardDb: React.FC<CardPropsDb> = ({ icon, title, data }) => {
+  return (
+    <div
+      // className={` p-4 rounded border border-stone-200 shadow-md col-span-${colSpan}`}
+      className="p-4 rounded border border-stone-200 shadow-md col-span-4"
+    >
+      <div className="flex items-center gap-2 mb-4">
+        {icon}
+        <h3 className="font-medium">{title}</h3>
+      </div>
+      <DatabaseDisplay dataPoint={data} />
     </div>
   );
 };
@@ -80,4 +138,15 @@ const createChartData = (dataPoints: number[], labels: string[]): ChartData => {
       },
     ],
   };
+};
+
+const DatabaseDisplay: React.FC<BarData> = ({ dataPoint }) => {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex flex-col">
+        <span className="text-2xl font-bold">{dataPoint}</span>
+        <span className="text-sm text-gray-500">Databases</span>
+      </div>
+    </div>
+  );
 };
