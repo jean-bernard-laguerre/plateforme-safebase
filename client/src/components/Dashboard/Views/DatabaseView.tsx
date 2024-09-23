@@ -180,7 +180,7 @@ const TableRow = ({
   return (
     <tr className={order % 2 ? "bg-stone-100 text-sm" : "text-sm "}>
       <td className="p-1.5">{dbName}</td>
-      <td className="p-1.5">{type}</td>
+      <td className="p-1.5 w-[16px]  ">{type}</td>
       <td className="p-1.5">{host}</td>
       <td className="p-1.5">{port}</td>
       <td className="p-1.5">{name}</td>

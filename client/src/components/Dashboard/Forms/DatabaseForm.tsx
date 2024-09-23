@@ -28,12 +28,10 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
     const response = await actions.connectTest(connection);
     console.log("response", response);
     if (response.success === true) {
-      //TODO: emoji thumbs up
-      toast.success("Test de connection réussi  ");
+      toast.success("Test de connection réussi 👍 ");
       setTestConnection(true);
     } else {
-      //TODO: emoji thumbs down
-      toast.error("Erreur lors du test de connection", {
+      toast.error("Erreur lors du test de connection 👎 ", {
         description: response.response.data.error,
       });
       setTestConnection(false);
@@ -150,7 +148,7 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
           <div>
             <button
               type="button"
-              className="text-sm font-semibold bg-violet-400 text-stone-50 p-2 rounded"
+              className="text-sm font-semibold bg-violet-500 text-stone-50 p-2 rounded hover:bg-violet-600"
               onClick={(e) => {
                 e.preventDefault();
                 console.log("test connection");
@@ -167,7 +165,7 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
             <button
               type="button"
               onClick={handleCloseModal}
-              className="text-sm font-semibold bg-red-500 text-white p-2 rounded"
+              className="text-sm font-semibold bg-error-500 text-white p-2 rounded hover:bg-error-600"
             >
               Cancel
             </button>
@@ -175,8 +173,8 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
               disabled={!testConnection}
               className={`ml-2 text-sm font-semibold text-white p-2 rounded ${
                 !testConnection
-                  ? "cursor-not-allowed bg-gray-300"
-                  : "bg-green-500"
+                  ? "cursor-not-allowed bg-success-cta-100 text-success-cta-400 border border-success-cta-400"
+                  : "bg-success-cta-700 text-stone-50 hover:bg-success-cta-600 "
               }`}
               onClick={(e) => {
                 e.preventDefault();
