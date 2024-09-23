@@ -31,7 +31,7 @@ export const Research = () => {
             setOpen(true);
           }}
           type="text"
-          placeholder="Rechercher"
+          placeholder="Search"
           className="w-full bg-transparent placeholder:text-stone-400 focus:outline-none"
         />
         <span className="p-1 text-xs flex gap-0.5 items-center shadow bg-stone-50 rounded absolute right-1.5 top-18 text-stone-500 ">

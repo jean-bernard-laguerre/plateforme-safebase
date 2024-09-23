@@ -56,11 +56,11 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
       <h2 className="text-lg font-medium mb-4">Add New Database</h2>
       <form>
         <div className="mb-4">
-          <label className="block text-sm font-medium">DB Name</label>
+          <label className="block text-sm font-medium">Database Name</label>
           <input
             type="text"
             className="w-full p-2 border rounded"
-            placeholder="Enter DB Name"
+            placeholder="Enter database name"
             onChange={(e) => {
               setConnection({ ...connection, Db_name: e.target.value });
               setTestConnection(false);
@@ -108,7 +108,7 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium">Db User</label>
+          <label className="block text-sm font-medium">User</label>
           <input
             type="text"
             className="w-full p-2 border rounded"
@@ -120,7 +120,7 @@ export const DatabaseForm: React.FC<DatabaseFormProps> = ({
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium">Db Password</label>
+          <label className="block text-sm font-medium">Password</label>
           <input
             type="password"
             className="w-full p-2 border rounded"

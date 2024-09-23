@@ -87,11 +87,11 @@ const TableHead = () => {
   return (
     <thead>
       <tr className="text-sm font-normal text-stone-500">
-        <th className="text-start p-1.5">Nom</th>
+        <th className="text-start p-1.5">Name</th>
         <th className="text-start p-1.5">Status</th>
-        <th className="text-start p-1.5">Date de création</th>
-        <th className="text-start p-1.5">Base de données source</th>
-        <th className="text-start p-1.5">Actions</th>
+        <th className="text-start p-1.5">Creation date</th>
+        <th className="text-start p-1.5">Source database</th>
+        <th className="text-start p-1.5">Action</th>
         <th className="w-1"></th>
       </tr>
     </thead>
@@ -101,7 +101,7 @@ const TableHead = () => {
 const TableRow = ({ entry, order }: { entry: History; order: number }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const DateDisplay = new Date(entry.Created_at);
-  const createdAtDisplay = DateDisplay.toLocaleString("fr-FR", {
+  const createdAtDisplay = DateDisplay.toLocaleString("en-UK", {
     month: "long",
     day: "numeric",
     hour: "numeric",

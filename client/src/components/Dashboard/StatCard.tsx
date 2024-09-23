@@ -60,7 +60,7 @@ export const StatCards: React.FC = () => {
         />
         <Card
           icon={<History />}
-          title="Restores"
+          title="Restorations"
           data={createChartData([overview?.restore_success, overview?.restore_fail], ["Completed", "Failed"])}
           colSpan={4}
         />

@@ -39,39 +39,39 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
   // modéles de cron avec valeurs par défaut et son équivallent en français
   const CronModels = [
     {
-      name: "Tous les jours à 6h",
+      name: "Every day at 6am",
       model: "0 6 * * *",
     },
     {
-      name: "Tous les jours à 12h",
+      name: "Every day at noon",
       model: "0 12 * * *",
     },
     {
-      name: "Tous les jours à 18h",
+      name: "Every day at 6pm",
       model: "0 18 * * *",
     },
     {
-      name: "Tous les jours à minuit",
+      name: "Every day at midnight",
       model: "0 0 * * *",
     },
     {
-      name: "Tous les dimanches à minuit",
+      name: "Every sunday at midnight",
       model: "0 0 * * 0",
     },
     {
-      name: "Toutes les minutes",
+      name: "Every minute",
       model: "* * * * *",
     },
     {
-      name: "Toutes les heures",
+      name: "Every hour",
       model: "0 * * * *",
     },
     {
-      name: "Tous les premiers de chaque mois à minuit",
+      name: "Every first day of the month at midnight",
       model: "0 0 1 * *",
     },
     {
-      name: "Tous les premiers janvier à minuit",
+      name: "Every first day of the year at midnight",
       model: "0 0 1 1 *",
     },
   ];
@@ -81,7 +81,7 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
     const response = await connect.getUserConnections();
     console.log("response", response);
     if (response.success === false) {
-      toast.error("Erreur lors de la récupération des connections", {
+      toast.error("An error occured while fetching connections:", {
         description: response.message,
       });
       console.log("erreur lors de la récupération des connections:", response);
@@ -96,11 +96,11 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
     const response = await dump.createTask(task);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Tâche ajoutée avec succès");
+      toast.success("Task added successfully");
 
       handleCloseModal();
     } else {
-      toast.error("Erreur lors de l'ajout de la tâche", {
+      toast.error("An error occured while adding the task:", {
         description: response.message,
       });
     }
@@ -124,11 +124,11 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
       {databases ? (
         <form>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Nom</label>
+            <label className="block text-sm font-medium">Name</label>
             <input
               type="text"
               className="w-full p-2 border rounded"
-              placeholder="Entrez le nom"
+              placeholder="Enter task name"
               onChange={(e) => {
                 setTask({ ...task, Name: e.target.value });
               }}
@@ -136,7 +136,7 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">
-              Tâche Programmée
+              Planned execution time
             </label>
             <select
               className="w-full p-2 border rounded"
@@ -153,7 +153,7 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium">
-              Base de donnée source
+              Source database
             </label>
             <select
               className="w-full p-2 border rounded"
@@ -176,7 +176,7 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
               onClick={handleCloseModal}
               className="text-sm font-semibold bg-red-500 text-white p-2 rounded"
             >
-              Annuler
+              Cancel
             </button>
             <button
               type="submit"
@@ -191,15 +191,17 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
                 addTask();
               }}
             >
-              Sauvegarder
+              Save
             </button>
           </div>
         </form>
       ) : (
         <div className="text-center text-sm">
-          <span>Vous n'avez pas encore de base de données</span>
+          <span>
+            No database found.
+          </span>
           <span className="block mt-2">
-            Veuillez ajouter une avant de continuer
+            Please add a database before continuing.
           </span>
         </div>
       )}

@@ -25,7 +25,7 @@ func (u *UserModel) Create(
 }
 
 func (u UserModel) GetById(id int) UserModel {
-	err := config.DB.QueryRow("SELECT * FROM users WHERE id = ?", id).Scan(
+	err := config.DB.QueryRow("SELECT * FROM user WHERE id = ?", id).Scan(
 		&u.Id, &u.Email, &u.Password)
 	if err != nil {
 		fmt.Println(err)
