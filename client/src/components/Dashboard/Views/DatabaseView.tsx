@@ -187,8 +187,8 @@ const TableRow = ({
         <span
           className={
             type == "postgres"
-              ? "px-2 py-1 w-[16px] bg-violet-400 rounded-full text-stone-200"
-              : "bg-violet-600 block px-2 py-1 w-[16px] rounded-full text-stone-200"
+              ? "px-2 py-1 w-[16px] bg-violet-400 rounded-full text-stone-100"
+              : "bg-violet-600 px-2 py-1 w-[16px] rounded-full text-stone-200"
           }
         >
           {type}

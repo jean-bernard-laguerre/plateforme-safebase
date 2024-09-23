@@ -1,10 +1,10 @@
 "use client";
-import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
-import { Database, DatabaseBackup, History } from "lucide-react";
-import React, { useState, useEffect, use } from "react";
-import { Pie } from "react-chartjs-2";
 import { actions as connecActions } from "@/services/connectionService";
 import { actions as historyAction } from "@/services/historyService";
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { Database, DatabaseBackup, History } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
 
 // Enregistre les composants de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -20,6 +20,8 @@ interface CardPropsDb {
   title: string;
   data: number;
   icon?: React.ReactNode;
+  nbMysql: number;
+  nbPostgres: number;
 }
 
 // Type pour les données du graphique
@@ -148,7 +150,13 @@ export const StatCards: React.FC = () => {
         title="Restores"
         data={createChartData([80, 20], ["Completed", "Failed"])}
       /> */}
-      <CardDb icon={<Database />} title="Databases" data={nbDatabases} />
+      <CardDb
+        icon={<Database />}
+        title="Databases"
+        data={nbDatabases}
+        nbMysql={nbMysql}
+        nbPostgres={nbPostgres}
+      />
     </>
   );
 };
@@ -168,17 +176,35 @@ const Card: React.FC<CardProps> = ({ icon, title, data }) => {
   );
 };
 
-const CardDb: React.FC<CardPropsDb> = ({ icon, title, data }) => {
+const CardDb: React.FC<CardPropsDb> = ({
+  icon,
+  title,
+  data,
+  nbMysql,
+  nbPostgres,
+}) => {
   return (
-    <div
-      // className={` p-4 rounded border border-stone-200 shadow-md col-span-${colSpan}`}
-      className="p-4 rounded border border-stone-200 shadow-md col-span-4"
-    >
+    <div className="p-4 rounded border border-stone-200 shadow-md col-span-4">
       <div className="flex items-center gap-2 mb-4">
         {icon}
         <h3 className="font-medium">{title}</h3>
       </div>
       <DatabaseDisplay dataPoint={data} />
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2 mt-20">
+          <div className="w-12 h-4 bg-violet-200 rounded-full"></div>
+          <span className="text-lg font-semibold">{nbMysql}</span>
+          <span className="text-lg font-semibold text-stone-800 ">MySQL</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-12 h-4 bg-violet-500 rounded-full"></div>
+
+          <span className="text-lg font-semibold ">{nbPostgres}</span>
+          <span className="text-lg font-semibold text-stone-800 ">
+            Postgres
+          </span>
+        </div>
+      </div>
     </div>
   );
 };
@@ -199,11 +225,9 @@ const createChartData = (dataPoints: number[], labels: string[]): ChartData => {
 
 const DatabaseDisplay: React.FC<BarData> = ({ dataPoint }) => {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex flex-col">
-        <span className="text-2xl font-bold">{dataPoint}</span>
-        <span className="text-sm text-gray-500">Databases</span>
-      </div>
+    <div className="flex flex-col w-full items-center justify-center">
+      <span className="text-[100px] font-bold">{dataPoint}</span>
+      <span className="text-sm text-gray-500">Databases</span>
     </div>
   );
 };
