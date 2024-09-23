@@ -18,7 +18,7 @@ const Tutorial: React.FC = () => {
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md text-center max-w-xl mx-auto">
+    <div className="flex flex-col items-center justify-center border border-stone-200 bg-transparent p-6 rounded-lg shadow-md text-center max-w-xl mx-auto">
       <div className="flex items-center justify-center mb-6 w-full relative space-x-4">
         {steps.map((_, index) => (
           <div key={index}>

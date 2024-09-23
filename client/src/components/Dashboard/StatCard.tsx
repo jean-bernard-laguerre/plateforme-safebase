@@ -56,7 +56,8 @@ const Card: React.FC<CardProps & { colSpan: number }> = ({
 }) => {
   return (
     <div
-      className={` p-4 rounded border border-stone-200 shadow-md col-span-${colSpan}`}
+      // className={` p-4 rounded border border-stone-200 shadow-md col-span-${colSpan}`}
+      className="p-4 rounded border border-stone-200 shadow-md col-span-4"
     >
       <div className="flex items-center gap-2 mb-4">
         {icon}
