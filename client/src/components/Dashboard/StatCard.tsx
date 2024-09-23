@@ -1,7 +1,7 @@
 "use client";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import { Database, DatabaseBackup, History } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Pie } from "react-chartjs-2";
 import { actions as connecActions } from "@/services/connectionService";
 import { actions as historyAction } from "@/services/historyService";
@@ -61,6 +61,8 @@ interface Overview {
 export const StatCards: React.FC = () => {
   const [databases, setDatabases] = useState<Databases | null>(null);
   const [nbDatabases, setNbDatabases] = useState<number>(0);
+  const [nbMysql, setNbMysql] = useState<number>(0);
+  const [nbPostgres, setNbPostgres] = useState<number>(0);
 
   async function getUserDatabase() {
     // get user databases
@@ -83,10 +85,21 @@ export const StatCards: React.FC = () => {
 
   useEffect(() => {
     if (databases) {
-      console.log("databases AAAAAAAAAA", databases.databases.length);
       setNbDatabases(databases.databases.length);
+      setNbMysql(
+        databases.databases.filter((db) => db.Db_type === "mysql").length
+      );
+      setNbPostgres(
+        databases.databases.filter((db) => db.Db_type === "postgres").length
+      );
     }
   }, [databases]);
+
+  useEffect(() => {
+    console.log("nbDatabases", nbDatabases);
+    console.log("nbMysql", nbMysql);
+    console.log("nbPostgres", nbPostgres);
+  }, [nbDatabases, nbMysql, nbPostgres]);
 
   const [overview, setOverview] = React.useState<Overview>();
 
