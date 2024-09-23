@@ -118,6 +118,16 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
     }
   }, [task]);
 
+  // Fonction pour déterminer la classe en fonction du type de base de données
+  const getDbTypeClass = (dbType: string) => {
+    switch (dbType.toLowerCase()) {
+      case "postgres":
+        return "bg-blue-200 text-blue-800";
+      case "mysql":
+        return "bg-green-200 text-green-800";
+    }
+  };
+
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Add New Task</h2>
@@ -162,10 +172,12 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
               }}
             >
               {databases?.databases.map((database) => (
-                <option key={database.Id} value={database.Id}>
-                  <span>
-                    {database.Db_name} (type: {database.Db_type})
-                  </span>
+                <option
+                  key={database.Id}
+                  value={database.Id}
+                  className={getDbTypeClass(database.Db_type)}
+                >
+                  {database.Db_name} (type: {database.Db_type})
                 </option>
               ))}
             </select>
@@ -174,7 +186,7 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
             <button
               type="button"
               onClick={handleCloseModal}
-              className="text-sm font-semibold bg-red-500 text-white p-2 rounded"
+              className="text-sm font-semibold bg-error-500 text-white p-2 rounded"
             >
               Annuler
             </button>
@@ -183,8 +195,8 @@ export const BackupForm: React.FC<BackupFormProps> = ({ handleCloseModal }) => {
               disabled={!formOk}
               className={`ml-2 text-sm font-semibold p-2 rounded ${
                 formOk
-                  ? "bg-green-500 text-white"
-                  : "bg-violet-100 text-stone-500 cursor-not-allowed"
+                  ? "bg-success-cta-500 text-white"
+                  : "bg-success-cta-400 border border-success-cta-600 text-stone-50 cursor-not-allowed"
               }`}
               onClick={(e) => {
                 e.preventDefault();

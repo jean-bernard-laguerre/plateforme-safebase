@@ -38,19 +38,11 @@ const DatabaseView = () => {
     setIsModalOpen(false);
   };
 
-  //TODO: PILLS pour les types de db
-  //TODO: ICONS pour la sauvegarde
-  //TODO: LIGNES violettes
-
   async function getUserDatabase() {
-    // get user databases
     const response = await actions.getUserConnections();
-    console.log("response", response);
     if (response.success === false) {
-      console.log("erreur lors de la récupération des connections:", response);
       return;
     } else if (response.connections.length > 0) {
-      console.log("response.connections", response.connections);
       setDatabases({ databases: response.connections });
     } else {
       setDatabases(null);
@@ -59,7 +51,6 @@ const DatabaseView = () => {
 
   async function dumpDatabase(id: number) {
     const response = await dump.dump(id);
-    console.log("response", response);
     if (response.success === true) {
       toast.success("Backup effectué avec succès");
     } else {
@@ -71,7 +62,6 @@ const DatabaseView = () => {
 
   async function deleteDatabase(id: number) {
     const response = await actions.deleteConnection(id);
-    console.log("response", response);
     if (response.success === true) {
       toast.success("Connection supprimée avec succès");
       getUserDatabase();
@@ -93,6 +83,19 @@ const DatabaseView = () => {
           <DatabaseZap />
           Database Connection
         </h3>
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-1">
+            <div className="w-10 h-4 bg-violet-400 rounded-full"></div>
+            <span className="text-sm font-semibold text-stone-600">
+              Postgres
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-10 h-4 bg-violet-600 rounded-full"></div>
+            <span className="text-sm font-semibold text-stone-600">MySQL</span>
+          </div>
+        </div>
+
         <Tooltip
           content="Add a new database"
           placement="left"
@@ -178,9 +181,19 @@ const TableRow = ({
   deleteDatabase: (id: number) => void;
 }) => {
   return (
-    <tr className={order % 2 ? "bg-stone-100 text-sm" : "text-sm "}>
+    <tr className={order % 2 ? "bg-violet-100 text-sm" : "text-sm "}>
       <td className="p-1.5">{dbName}</td>
-      <td className="p-1.5 w-[16px]  ">{type}</td>
+      <td className="p-1.5">
+        <span
+          className={
+            type == "postgres"
+              ? "px-2 py-1 w-[16px] bg-violet-400 rounded-full text-stone-200"
+              : "bg-violet-600 block px-2 py-1 w-[16px] rounded-full text-stone-200"
+          }
+        >
+          {type}
+        </span>
+      </td>
       <td className="p-1.5">{host}</td>
       <td className="p-1.5">{port}</td>
       <td className="p-1.5">{name}</td>
