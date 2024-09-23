@@ -51,4 +51,21 @@ func AddRoutes(app *fiber.App) {
 			"history": histories,
 		})
 	})
+
+	hy.Get("/Overview", func(ctx *fiber.Ctx) error {
+		id := ctx.Locals("userId").(int)
+		h := HistoryModel{}
+
+		overview, err := h.Overview(id)
+		if err != nil {
+			return ctx.Status(400).JSON(fiber.Map{
+				"success": false,
+				"error":   err.Error(),
+			})
+		}
+		return ctx.Status(200).JSON(fiber.Map{
+			"success":  true,
+			"overview": overview,
+		})
+	})
 }
