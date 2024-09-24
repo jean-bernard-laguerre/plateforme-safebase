@@ -11,6 +11,7 @@ interface Backup {
   Name: string;
   Cron_job: string;
   Db_name: string;
+  Db_type: string;
   Created_at: string;
   Active: boolean;
   Connection_id: number;
@@ -97,6 +98,10 @@ const BackupView = () => {
     }
   }, [isModalOpen]);
 
+  useEffect(() => {
+    console.log("backups", backups);
+  }, [backups]);
+
   return (
     <div className="p-4 col-span-12 bg-transparent rounded border border-stone-300 mx-2">
       <div className="mb-4 flex items-center justify-between">
@@ -104,6 +109,18 @@ const BackupView = () => {
           <DatabaseBackup />
           BackUps
         </h3>
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-1">
+            <div className="w-10 h-4 bg-violet-400 rounded-full"></div>
+            <span className="text-sm font-semibold text-stone-600">
+              Postgres
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-10 h-4 bg-violet-600 rounded-full"></div>
+            <span className="text-sm font-semibold text-stone-600">MySQL</span>
+          </div>
+        </div>
         <Tooltip
           content="Add a new backup"
           placement="left"
@@ -129,6 +146,7 @@ const BackupView = () => {
                 name={backup.Name}
                 cron={backup.Cron_job}
                 dbName={backup.Db_name}
+                dbType={backup.Db_type}
                 createdAt={backup.Created_at}
                 active={backup.Active}
                 connectionId={backup.Connection_id}
@@ -142,9 +160,7 @@ const BackupView = () => {
         </table>
       ) : (
         <div className="text-center text-sm">
-          <span>
-            You have no scheduled backups currently.
-          </span>
+          <span>You have no scheduled backups currently.</span>
         </div>
       )}
 
@@ -175,6 +191,7 @@ const TableRow = ({
   name,
   cron,
   dbName,
+  dbType,
   createdAt,
   active,
   connectionId,
@@ -187,6 +204,7 @@ const TableRow = ({
   name: string;
   cron: string;
   dbName: string;
+  dbType: string;
   createdAt: string;
   active: boolean;
   connectionId: number;
@@ -248,7 +266,17 @@ const TableRow = ({
     <tr className={order % 2 ? "bg-violet-100 text-sm" : "text-sm"}>
       <td className="text-start p-1.5">{name}</td>
       <td className="text-start p-1.5">{cronDisplay}</td>
-      <td className="text-start p-1.5">{dbName}</td>
+      <td className="text-start p-1.5">
+        <span
+          className={
+            dbType == "postgres"
+              ? "px-2 py-1 w-[16px] bg-violet-400 rounded-full text-stone-100"
+              : "bg-violet-600 px-2 py-1 w-[16px] rounded-full text-stone-200"
+          }
+        >
+          {dbName}
+        </span>
+      </td>
       <td className="text-start p-1.5">{createdAtDisplay}</td>
       <td className="text-start p-1.5 flex">
         {active ? (

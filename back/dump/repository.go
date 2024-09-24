@@ -47,7 +47,7 @@ func (d *DumpModel) GetAll() ([]DumpModel, error) {
 
 func (d *DumpModel) GetByUserId(userId int) ([]DumpModel, error) {
 	rows, err := config.DB.Query(`
-		SELECT backup.id, backup.name, backup.cron_job, backup.connection_id, backup.created_at, backup.active, connection.db_name
+		SELECT backup.id, backup.name, backup.cron_job, backup.connection_id, backup.created_at, backup.active, connection.db_name, connection.db_type
 		FROM backup
 		Join connection ON backup.connection_id = connection.id
 		WHERE connection.user_id = ?`, userId)
@@ -60,7 +60,7 @@ func (d *DumpModel) GetByUserId(userId int) ([]DumpModel, error) {
 
 	for rows.Next() {
 		var d DumpModel
-		err := rows.Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at, &d.Active, &d.Db_name)
+		err := rows.Scan(&d.Id, &d.Name, &d.Cron_job, &d.Connection_id, &d.Created_at, &d.Active, &d.Db_name, &d.Db_type)
 		if err != nil {
 			return []DumpModel{}, err
 		}

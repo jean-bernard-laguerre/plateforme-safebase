@@ -12,4 +12,5 @@ type DumpModel struct {
 	Created_at    time.Time
 	Active        bool
 	Db_name       string
+	Db_type       string
 }
