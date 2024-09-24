@@ -11,7 +11,6 @@ export const CommandMenu = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-
   const router = useRouter();
   const [value, setValue] = useState("");
   // Toggle le menu lorsque l'utilisateur appuie sur Cmd + K
@@ -61,10 +60,12 @@ export const CommandMenu = ({
             heading="Databases"
             className="text-sm font-semibold  text-stone-400 p-2"
           >
-            <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2"
+            <Command.Item
+              className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2"
               onSelect={() => {
                 console.log("clicked");
-                router.push("/database")}}
+                router.push("/database");
+              }}
             >
               <CirclePlus />
               Add a Database
@@ -79,7 +80,8 @@ export const CommandMenu = ({
             heading="Backups"
             className="text-sm font-semibold text-stone-400 p-2"
           >
-            <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2"
+            <Command.Item
+              className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2"
               onSelect={() => router.push("/backup")}
             >
               <CirclePlus />
@@ -91,18 +93,19 @@ export const CommandMenu = ({
             </Command.Item> */}
             <Command.Separator />
           </Command.Group>
-            <Command.Group
-              heading="History"
-              className="text-sm font-semibold text-stone-400 p-2"
+          <Command.Group
+            heading="History"
+            className="text-sm font-semibold text-stone-400 p-2"
+          >
+            <Command.Item
+              className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 mb-2 rounded items-center gap-2"
+              onSelect={() => router.push("/history")}
             >
-              <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 mb-2 rounded items-center gap-2"
-                onClick={() => router.push("/history")}
-              >
-                <Eye />
-                See operations history
-              </Command.Item>
-              <Command.Separator />
-            </Command.Group>
+              <Eye />
+              See operations history
+            </Command.Item>
+            <Command.Separator />
+          </Command.Group>
 
           <Command.Item
             className="flex cursor-pointer transition-colors p-2 text-sm text-stone-50 hover:bg-stone-700 bg-stone-900 rounded items-center gap-2"
