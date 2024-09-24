@@ -6,7 +6,7 @@ const Tutorial: React.FC = () => {
 
   // Contenu des étapes du didacticiel
   const steps = [
-    "Step 1 : Connect to your accoount to manage your databases.",
+    "Step 1 : Connect to your account to manage your databases.",
     "Step 2 : Navigate to the backup page to see all your saved backups.",
     "Step 3 : Use the restore feature to restore from a previous backup.",
     "Step 4 : Consult the statistics page to see the state of your databases.",
