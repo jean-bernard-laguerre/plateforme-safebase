@@ -6,10 +6,10 @@ const Tutorial: React.FC = () => {
 
   // Contenu des étapes du didacticiel
   const steps = [
-    "Étape 1 : Connectez-vous à votre compte pour accéder à vos sauvegardes.",
-    "Étape 2 : Naviguez vers la section 'Backups' pour voir toutes les sauvegardes disponibles.",
-    "Étape 3 : Utilisez les options de restauration pour récupérer une sauvegarde précédente.",
-    "Étape 4 : Consultez les statistiques pour surveiller l’état de vos bases de données.",
+    "Step 1 : Connect to your accoount to manage your databases.",
+    "Step 2 : Navigate to the backup page to see all your saved backups.",
+    "Step 3 : Use the restore feature to restore from a previous backup.",
+    "Step 4 : Consult the statistics page to see the state of your databases.",
   ];
 
   // Fonction pour changer l'étape

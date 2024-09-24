@@ -39,7 +39,7 @@ const BackupView = () => {
     const response = await dump.getAll();
     console.log("response", response);
     if (response.success === false) {
-      toast.error("Erreur lors de la récupération des backups", {
+      toast.error("An error occured while fetching backups:", {
         description: response.message,
       });
 
@@ -57,9 +57,9 @@ const BackupView = () => {
     console.log("response", response);
     if (response.success === true) {
       getUserBackups();
-      toast.success("Backup effectué avec succès");
+      toast.success("Backup completed successfully");
     } else {
-      toast.error("Erreur lors du Backup de la base de données", {
+      toast.error("An error occured during the database backup:", {
         description: response.message,
       });
     }
@@ -69,10 +69,10 @@ const BackupView = () => {
     const response = await dump.deleteTask(id);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Tâche supprimée avec succès");
+      toast.success("Task deleted successfully");
       getUserBackups();
     } else {
-      toast.error("Erreur lors de la suppression de la tâche", {
+      toast.error("An error occured during the task suppression:", {
         description: response.message,
       });
     }
@@ -82,10 +82,10 @@ const BackupView = () => {
     const response = await dump.toggleTask(id, value);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Tâche modifiée avec succès");
+      toast.success("Task modified successfully");
       getUserBackups();
     } else {
-      toast.error("Erreur lors de la modification de la tâche", {
+      toast.error("An error occured during the task modification", {
         description: response.message,
       });
     }
@@ -142,7 +142,9 @@ const BackupView = () => {
         </table>
       ) : (
         <div className="text-center text-sm">
-          <span>Vous n'avez pas encore de tâches programmées</span>
+          <span>
+            You have no scheduled backups currently.
+          </span>
         </div>
       )}
 
@@ -157,11 +159,11 @@ const TableHead = () => {
   return (
     <thead>
       <tr className="text-sm font-normal text-stone-500">
-        <th className="text-start p-1.5">Nom</th>
-        <th className="text-start p-1.5">Tâche Programmée</th>
-        <th className="text-start p-1.5">DB Name</th>
-        <th className="text-start p-1.5">Date de création</th>
-        <th className="text-start p-1.5">Actions</th>
+        <th className="text-start p-1.5">Name</th>
+        <th className="text-start p-1.5">Schedule</th>
+        <th className="text-start p-1.5">Database name</th>
+        <th className="text-start p-1.5">Creation date</th>
+        <th className="text-start p-1.5">Action</th>
         <th className="w-1"></th>
       </tr>
     </thead>
@@ -195,39 +197,39 @@ const TableRow = ({
 }) => {
   const CronModels = [
     {
-      name: "Tous les jours à 6h",
+      name: "Every day at 6am",
       model: "0 6 * * *",
     },
     {
-      name: "Tous les jours à 12h",
+      name: "Every day at noon",
       model: "0 12 * * *",
     },
     {
-      name: "Tous les jours à 18h",
+      name: "Every day at 6pm",
       model: "0 18 * * *",
     },
     {
-      name: "Tous les jours à minuit",
+      name: "Every day at midnight",
       model: "0 0 * * *",
     },
     {
-      name: "Tous les dimanches à minuit",
+      name: "Every sunday at midnight",
       model: "0 0 * * 0",
     },
     {
-      name: "Toutes les minutes",
+      name: "Every minute",
       model: "* * * * *",
     },
     {
-      name: "Toutes les heures",
+      name: "Every hour",
       model: "0 * * * *",
     },
     {
-      name: "Tous les premiers de chaque mois à minuit",
+      name: "Every first day of the month at midnight",
       model: "0 0 1 * *",
     },
     {
-      name: "Tous les premiers janvier à minuit",
+      name: "Every first day of the year at midnight",
       model: "0 0 1 1 *",
     },
   ];
@@ -235,7 +237,7 @@ const TableRow = ({
   const cronDisplay = CronModels.find((model) => model.model === cron)?.name;
 
   const DateDisplay = new Date(createdAt);
-  const createdAtDisplay = DateDisplay.toLocaleString("fr-FR", {
+  const createdAtDisplay = DateDisplay.toLocaleString("en-UK", {
     month: "long",
     day: "numeric",
     hour: "numeric",

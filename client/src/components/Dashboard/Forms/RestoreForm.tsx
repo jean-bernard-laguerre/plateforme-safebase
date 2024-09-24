@@ -1,6 +1,5 @@
 import { actions as connect } from "@/services/connectionService";
 import { actions as dump } from "@/services/dumpService";
-import React, { useEffect } from "react";
 import { toast } from "sonner";
 interface History {
   Id: number;
@@ -46,7 +45,7 @@ const RestoreForm = ({
     const response = await connect.getUserConnections();
     console.log("response", response);
     if (response.success === false) {
-      toast.error("Erreur lors de la récupération des connections");
+      toast.error("An error occured while fetching databases:");
       return;
     } else if (response.connections.length > 0) {
       console.log("response.connections", response.connections);
@@ -62,11 +61,14 @@ const RestoreForm = ({
     const response = await dump.restore(history.Id, restoreTarget);
     console.log("response", response);
     if (response.success === true) {
-      toast.success("Restauration effectuée avec succès");
-
+      console.log("Successful restoration", response.message);
+      toast.success("Restoration completed successfully");
       close();
     } else {
-      console.log("erreur lors de la restauration de la base:", response);
+      console.log("An error occured during the restoration:", response);
+      toast.error("An error occured during the restoration:", {
+        description: response.message,
+      });
     }
   }
 
@@ -89,7 +91,7 @@ const RestoreForm = ({
       </h2>
       <div className="mb-4">
         <label className="block text-sm font-medium">
-          Base de donnée cible
+          Select the target database
         </label>
         <select
           className="w-full p-2 border rounded"
@@ -97,7 +99,9 @@ const RestoreForm = ({
             setRestoreTarget(parseInt(e.target.value));
           }}
         >
-          <option value={0}>Selectionnez une base de donnée</option>
+          <option value={0}>
+            Select a database
+          </option>
           {databases?.databases.map((database) => (
             <option key={database.Id} value={database.Id}>
               <span>
@@ -113,7 +117,7 @@ const RestoreForm = ({
           onClick={close}
           className="text-sm font-semibold bg-red-500 text-white p-2 rounded"
         >
-          Annuler
+          Cancel
         </button>
         <button
           type="submit"
@@ -128,7 +132,7 @@ const RestoreForm = ({
             restoreDatabase();
           }}
         >
-          Sauvegarder
+          Save
         </button>
       </div>
     </div>

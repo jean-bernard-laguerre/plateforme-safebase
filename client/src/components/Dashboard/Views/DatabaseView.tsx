@@ -52,9 +52,9 @@ const DatabaseView = () => {
   async function dumpDatabase(id: number) {
     const response = await dump.dump(id);
     if (response.success === true) {
-      toast.success("Backup effectué avec succès");
+      toast.success("Backup completed successfully");
     } else {
-      toast.error("Erreur lors du Backup de la base de données", {
+      toast.error("An error occured during the database backup", {
         description: response.message,
       });
     }
@@ -63,10 +63,10 @@ const DatabaseView = () => {
   async function deleteDatabase(id: number) {
     const response = await actions.deleteConnection(id);
     if (response.success === true) {
-      toast.success("Connection supprimée avec succès");
+      toast.success("Database connection deleted successfully");
       getUserDatabase();
     } else {
-      toast.error("Erreur lors de la suppression de la connection", {
+      toast.error("An error occured during the database connection deletion ", {
         description: response.message,
       });
     }
@@ -133,7 +133,9 @@ const DatabaseView = () => {
         </table>
       ) : (
         <div className="text-center text-sm">
-          <span>Vous n'avez pas encore de base de données</span>
+          <span>
+            You have no saved database.
+          </span>
         </div>
       )}
 
@@ -148,11 +150,11 @@ const TableHead = () => {
   return (
     <thead>
       <tr className="text-sm font-normal text-stone-500">
-        <th className="text-start p-1.5">DBName</th>
+        <th className="text-start p-1.5">Database name</th>
         <th className="text-start p-1.5">Type</th>
         <th className="text-start p-1.5">Host</th>
         <th className="text-start p-1.5">Port</th>
-        <th className="text-start p-1.5">Name</th>
+        <th className="text-start p-1.5">Custom name</th>
         <th className="w-1"></th>
       </tr>
     </thead>
