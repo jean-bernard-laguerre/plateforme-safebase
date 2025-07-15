@@ -37,7 +37,8 @@ func (u UserModel) GetByEmail(email string) (UserModel, error) {
 	err := config.DB.QueryRow("SELECT * FROM user WHERE email = ?", email).Scan(
 		&u.Id, &u.Email, &u.Password)
 	if err != nil {
-		return u, err
+		fmt.Println("Erreur lors de la recherche de l'email:", err)
+		return UserModel{}, err
 	}
 	return u, nil
 }
