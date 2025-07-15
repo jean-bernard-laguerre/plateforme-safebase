@@ -12,7 +12,8 @@ var DB *sql.DB
 func InitDB() {
 	var err error
 
-	config := mysql.Config{
+	// Première connexion sans DBName
+	configNoDB := mysql.Config{
 		User:                 "root",
 		Passwd:               "verysecure",
 		Net:                  "tcp",
@@ -21,16 +22,35 @@ func InitDB() {
 		ParseTime:            true,
 	}
 
-	DB, err = sql.Open("mysql", config.FormatDSN())
+	DB, err = sql.Open("mysql", configNoDB.FormatDSN())
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Connected to: ", fmt.Sprintf(config.Addr))
+	fmt.Println("Connected to: ", fmt.Sprintf(configNoDB.Addr))
 
 	err = SetupDatabase()
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	DB.Close()
+
+	// Deuxième connexion avec DBName
+	configWithDB := mysql.Config{
+		User:                 "root",
+		Passwd:               "verysecure",
+		Net:                  "tcp",
+		Addr:                 "mysql:3306",
+		DBName:               "safebase",
+		AllowNativePasswords: true,
+		ParseTime:            true,
+	}
+
+	DB, err = sql.Open("mysql", configWithDB.FormatDSN())
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Connected to database: safebase")
 }
 
 func CloseDB() {
